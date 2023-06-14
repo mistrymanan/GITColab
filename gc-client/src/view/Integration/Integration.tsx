@@ -1,6 +1,6 @@
 const Integration = () => {
     return (
-        <h1>Integration</h1>
+        <h1>Integration View</h1>
     )
 }
 

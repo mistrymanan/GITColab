@@ -1,13 +1,14 @@
 import { Card } from "react-bootstrap"
+import {Link} from 'react-router-dom';
 
 const Project = ({data}) => {
 
     return (
         <Card className="my-3 p-3 rounded " border="primary"  >
             {/*- Will change later but clicking each card should re-direct to the dashboard of that project*/}
-            <a href={`/dashboard/${data._id}`}>
+            <Link to={`/dashboard/${data._id}`}>
                 <Card.Img src={data.image} variant="top"/>
-            </a>  
+            </Link>  
             
             <Card.Body>
             
