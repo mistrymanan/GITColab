@@ -8,7 +8,8 @@ const Footer = () => {
             <Container fluid >
                 <Row>
                     <Col className='text-center py-3' >
-                        Github Collab Project
+                        <hr style={{height:2, color:'black', backgroundColor:'black', borderColor : 'black',}} ></hr>
+                        Github Collab Project<br/>CSCI 5308
                     </Col>
                 </Row>
             </Container>
