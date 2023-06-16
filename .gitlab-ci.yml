@@ -1,0 +1,37 @@
+stages:
+  - build
+  - test
+
+cache:
+  paths:
+    - .m2/repository
+    - gc-client/node_modules
+
+build:server:
+  image: maven:3.8.7-openjdk-18
+  stage: build
+  script:
+    - cd gc-server
+    - mvn compile
+
+test:server:
+  image: maven:3.8.7-openjdk-18
+  stage: test
+  script:
+    - cd gc-server
+    - mvn test
+
+build:client:
+  image: node:latest
+  stage: build
+  script:
+    - cd gc-client
+    - npm install
+    - npm run build
+
+test:client:
+  image: node:latest
+  stage: test
+  script:
+    - cd gc-client
+    - npm test
