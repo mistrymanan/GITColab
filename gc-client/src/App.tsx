@@ -1,25 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
+
 import './App.css';
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
+import {Container} from 'react-bootstrap';
+import Profile from './view/Profile/Profile';
+import Dashboard from './view/Dashboard/Dashboard';
+import Explore from './view/Explore/Explore';
+import Integration from './view/Integration/Integration';
+import Landing from './view/Landing/Landing';
+import HomeScreen from './view/HomeScreen/HomeScreen';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Header/>
+
+        <Container>
+          <Routes>
+            <Route path='/' Component={HomeScreen}/>
+            <Route path='/profile' Component={Profile}/>
+            <Route path='/dashboard' Component={Dashboard}/>
+            <Route path='/explore' Component={Explore}/>
+            <Route path='/integration' Component={Integration}/>
+            <Route path='/landing' Component={Landing}/>
+          </Routes>
+        </Container>
+
+      <Footer/>
+    </Router>
   );
 }
 
