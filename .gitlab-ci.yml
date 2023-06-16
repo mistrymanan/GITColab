@@ -1,6 +1,11 @@
 stages:
-  - build
   - test
+  - build
+  - deploy
+
+# workflow:
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == "development" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "staging" || ($CI_PIPELINE_SOURCE == 'merge_request_event' && ( $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "development" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging" ))
 
 cache:
   paths:
@@ -35,3 +40,4 @@ test:client:
   script:
     - cd gc-client
     - npm test
+
