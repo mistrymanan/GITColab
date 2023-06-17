@@ -1,6 +1,6 @@
 stages:
-  - build
   - test
+  - build
   - deploy
 
 # workflow:
@@ -36,7 +36,6 @@ build:client:
   stage: build
   script:
     - cd gc-client
-    - npm install
     - npm run build
 
 test:client:
@@ -44,6 +43,7 @@ test:client:
   stage: test
   script:
     - cd gc-client
+    - npm install
     - npm test
 
 deploy:
@@ -52,6 +52,7 @@ deploy:
   script:
     - cd gc-client
     - npm install netlify-cli --save-dev
+    - npm run build
     - npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --dir build/ --prod
   # only:
   #   refs:
