@@ -1,6 +1,6 @@
 stages:
-  - test
   - build
+  - test
   - deploy
 
 # workflow:
@@ -15,6 +15,7 @@ cache:
   paths:
     - .m2/repository
     - gc-client/node_modules
+    - gc-client/build
 
 build:server:
   image: maven:3.8.7-openjdk-18
@@ -35,6 +36,7 @@ build:client:
   stage: build
   script:
     - cd gc-client
+    - npm install
     - npm run build
 
 test:client:
@@ -42,7 +44,6 @@ test:client:
   stage: test
   script:
     - cd gc-client
-    - npm install
     - npm test
 
 deploy:
@@ -50,7 +51,6 @@ deploy:
   image: node:latest
   script:
     - cd gc-client
-    - echo "Variables --------------------------------------------- $NETLIFY_AUTH_TOKEN --------------------------------------------------"
     - npm install netlify-cli --save-dev
     - npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --dir build/ --prod
   # only:
