@@ -3,9 +3,9 @@ stages:
   - build
   - deploy
 
-# workflow:
-#   rules:
-#     - if: $CI_COMMIT_BRANCH == "development" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "staging" || ($CI_PIPELINE_SOURCE == 'merge_request_event' && ( $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "development" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging" ))
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "development" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "staging" || ($CI_PIPELINE_SOURCE == 'merge_request_event' && ( $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "development" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging" ))
 
 variables:
   NETLIFY_SITE_ID: $NETLIFY_SITE_ID
@@ -54,6 +54,6 @@ deploy:
     - npm install netlify-cli --save-dev
     - npm run build
     - npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN --dir build/ --prod
-  # only:
-  #   refs:
-  #     - main
+  only:
+    refs:
+      - main
