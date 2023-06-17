@@ -13,12 +13,14 @@ import Landing from './view/Landing/Landing';
 import HomeScreen from './view/HomeScreen/HomeScreen';
 
 
+
 function App() {
 
   return (
     <Router>
       <Header/>
         <Container>
+          {/* Refactor later */}
             <Routes>
               <Route path='/' Component={HomeScreen}/>
               <Route path='/profile' Component={Profile}/>
@@ -26,6 +28,7 @@ function App() {
               <Route path='/explore' Component={Explore}/>
               <Route path='/integration' Component={Integration}/>
               <Route path='/landing' Component={Landing}/>
+
             </Routes>
         </Container>
 
