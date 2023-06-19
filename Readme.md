@@ -57,6 +57,18 @@ The pipeline ensures every code push or merge request is tested and built before
 
 Our CI/CD pipeline deploys the project to Netlify. The deployed application can be found [here](https://keen-rolypoly-f595cb.netlify.app/).
 
+## **CI/CD Pipeline Caching**
+
+Caching in our CI/CD pipeline boosts build speeds by storing and reusing heavy-to-fetch data.
+
+Configured within the `gitlab-ci.yml` file, we cache the following paths:
+
+- `.m2/repository`: Holds Maven project dependencies, avoiding repeated internet downloads.
+- `gc-client/node_modules`: Contains Node.js dependencies of our front-end application, eliminating the need for constant downloads.
+- `gc-client/build`: Stores the compiled front-end code, expediting the deployment process.
+
+This approach promotes pipeline efficiency by limiting unnecessary recompilation and redownloading, thus conserving time and bandwidth.
+
 ## **Technologies Used Till now**
 - Java Spring Boot
 - JUnit
