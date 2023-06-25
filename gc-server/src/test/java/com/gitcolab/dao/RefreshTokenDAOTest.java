@@ -51,7 +51,7 @@ class RefreshTokenDAOTest {
         verify(refreshTokenDAO).deleteByUser(user);
     }
     @Test
-    void delete(RefreshToken t){
+    void delete(){
         refreshTokenDAO.delete(refreshToken);
         verify(refreshTokenDAO).delete(refreshToken);
     }
