@@ -34,8 +34,7 @@ public class JDBCRefreshTokenDAO implements RefreshTokenDAO {
         parameters.addValue("userId", refreshToken.getUser().getId());
         parameters.addValue("token", refreshToken.getToken());
         parameters.addValue("expiryDate", refreshToken.getExpiryDate());
-        namedParameterJdbcTemplate.update(sql, parameters);
-        return 0;
+        return namedParameterJdbcTemplate.update(sql, parameters);
     }
 
     @Override
