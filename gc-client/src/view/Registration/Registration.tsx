@@ -1,8 +1,7 @@
 import { Card, Button, Row, Col, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-
-const Login = () => {
+const Registration = () => {
 
     return (
         <>
@@ -30,6 +29,8 @@ const Login = () => {
                     </Card.Header>
 
                     <Card.Body>
+                        <h1>First Name</h1>
+                        <h1>Last Name</h1>
                         <h1>Email</h1>
                         <h1>Password</h1>
                     </Card.Body>
@@ -49,4 +50,4 @@ const Login = () => {
     )
 }
 
-export default Login;
+export default Registration;

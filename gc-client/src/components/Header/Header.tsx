@@ -1,4 +1,4 @@
-import {Container, Navbar, Nav, NavDropdown} from 'react-bootstrap';
+import {Container, Navbar, Nav} from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
 const Header = () => {
@@ -38,15 +38,12 @@ const Header = () => {
                             <LinkContainer to='/profile'>
                                 <Nav.Link>
                                     <i className="fas fa-user"></i> Profile
-                                    
                                 </Nav.Link>
-
-
                             </LinkContainer>
                         </Nav>
 
                     </Navbar.Collapse>
-
+                    
                 </Container>
             </Navbar>
         </header>

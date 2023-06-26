@@ -1,7 +1,7 @@
 import { Card } from "react-bootstrap"
 import {Link} from 'react-router-dom';
 
-const Project = ({projectData}) => {
+const Project = ({projectData}:any) => {
 
     return (
         <Card className="my-3 p-3 rounded " border="primary"  >
@@ -11,7 +11,6 @@ const Project = ({projectData}) => {
             </Link>  
             
             <Card.Body>
-            
                 <Card.Text className="my-1"><h4>{projectData.name}</h4></Card.Text> 
                 <Card.Text><strong>{projectData.owner}</strong></Card.Text> 
                 <Card.Text as='p'>{projectData.stars} <i className="fas fa-solid fa-star"/>'s</Card.Text> 
