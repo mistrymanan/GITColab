@@ -16,7 +16,7 @@ const FrontEndRoutes = () => {
         <>
             {/* Refactor later */}
             <Routes>
-                <Route path='/' Component={Dashboard}/>
+                <Route path='/' Component={Landing}/>
                 <Route path='/profile' Component={Profile}/>
                 <Route path='/dashboard' Component={Dashboard}/>
                 <Route path='/explore' Component={Explore}/>

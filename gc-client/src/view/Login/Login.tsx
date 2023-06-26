@@ -32,6 +32,9 @@ const Login = () => {
                     <Card.Body>
                         <h1>Email</h1>
                         <h1>Password</h1>
+                        <Link to='/Dashboard' relative='path'>
+                            <Button variant="dark">Sign In</Button>
+                        </Link>
                     </Card.Body>
 
                     <Card.Footer>
