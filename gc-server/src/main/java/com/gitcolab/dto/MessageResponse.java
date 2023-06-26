@@ -3,10 +3,12 @@ package com.gitcolab.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
-    private String username;
+@ToString
+@NoArgsConstructor
+public class MessageResponse {
+    private String message;
 }
