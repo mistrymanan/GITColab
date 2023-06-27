@@ -34,7 +34,10 @@ public class JDBCUserDAO implements UserDAO{
 
     @Override
     public int update(Object o) {
-        return 0;
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(o);
+        return namedParameterJdbcTemplate
+                .update("UPDATE users SET `username` = :username,`email` = :email,`password` = :password,`firstName` = :firstName,`lastName` = :lastName, `otp` = :otp, `otpExpiry` = :otpExpiry WHERE `email` = :email"
+                        ,namedParameters);
     }
 
     @Override
@@ -61,6 +64,6 @@ public class JDBCUserDAO implements UserDAO{
 
     @Override
     public boolean existsByEmail(String email) {
-        return jdbcTemplate.queryForObject("select count(*) from users u where u.username=?",new Object[]{email},Integer.class)>0;
+        return jdbcTemplate.queryForObject("select count(*) from users u where u.email=?",new Object[]{email},Integer.class)>0;
     }
 }

@@ -1,8 +1,7 @@
 package com.gitcolab.controllers;
 
-import com.gitcolab.dto.LoginRequest;
-import com.gitcolab.dto.RegisterUserRequest;
-import com.gitcolab.dto.TokenRefreshRequest;
+import com.fasterxml.jackson.core.PrettyPrinter;
+import com.gitcolab.dto.*;
 import com.gitcolab.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +28,20 @@ public class AuthenticationController {
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@Valid @RequestBody TokenRefreshRequest request) {
        return userService.refreshtoken(request);
+    }
+
+    @PostMapping("/send-otp")
+    public ResponseEntity<?> sendResetPasswordOTP(@Valid @RequestBody SendOTPRequest request) {
+        return userService.sendResetPasswordOTP(request);
+    }
+
+    @PostMapping("/validate-otp")
+    public ResponseEntity<?> validateResetPasswordOTP(@Valid @RequestBody ValidateOTPRequest request) {
+        return userService.validateResetPasswordOTP(request);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        return userService.resetPassword(request);
     }
 }
