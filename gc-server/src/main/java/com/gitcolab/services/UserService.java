@@ -122,11 +122,12 @@ public class UserService {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Something went wrong!"));
         }
         boolean isValidOTP =user.get().getOtp().equals(validateOTPRequest.getOtp());
-        long otpExpiry = Instant.now().getEpochSecond();
-        boolean isValidOTPExpiry = Long.parseLong(user.get().getOtpExpiry()) <= otpExpiry;
-        if(!isValidOTP || !isValidOTPExpiry) {
+        long currentEpoch = Instant.now().getEpochSecond();
+        boolean isValidOTPExpiry = Long.parseLong(user.get().getOtpExpiry()) >= currentEpoch;
+        if(!isValidOTPExpiry) return ResponseEntity.badRequest().body(new MessageResponse("Error: OTP expired! Please resend."));
+        if(!isValidOTP)
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid OTP! Please try again"));
-        }
+
         user.get().setOtp(null);
         user.get().setOtpExpiry(null);
         userRepository.update(user.get());
