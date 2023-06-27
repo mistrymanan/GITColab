@@ -5,15 +5,11 @@ const Registration = () => {
 
     return (
         <>
-            <Link to='/Landing' relative='path' style={{padding:'5em'}}>
-                <i className="fas fa-sharp fa-regular fa-arrow-left fa-2xl" ></i>
-            </Link>
-            
-            <Container className="d-flex justify-content-center  "> 
-                <Card style={{width:'45em', position:'absolute'}} >
+
+            <Container className="d-flex justify-content-center "> 
+                <Card style={{width:'45em', position:'absolute'}}>
 
                     <Card.Header style={{backgroundColor:"black"}}>
-
                         <Row>
                             <Col className="d-flex justify-content-center " >
                                 <Link to='/Login' relative='path'>
@@ -25,9 +21,9 @@ const Registration = () => {
                                 </Link>
                             </Col>
                         </Row>
-                    
                     </Card.Header>
 
+                    {/*Validation Event Handlers*/}
                     <Card.Body>
                         <h1>First Name</h1>
                         <h1>Last Name</h1>
@@ -36,14 +32,11 @@ const Registration = () => {
                     </Card.Body>
 
                     <Card.Footer>
-
                         <Link to='/ForgotPassword' relative='path'>
                             <Button variant="link" style={{color:"blue"}}>Forgot Password?</Button>
                         </Link>
-
-
-
                     </Card.Footer>
+
                 </Card>
             </Container>
         </>

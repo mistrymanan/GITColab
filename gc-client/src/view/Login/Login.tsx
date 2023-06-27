@@ -6,10 +6,7 @@ const Login = () => {
 
     return (
         <>
-            <Link to='/Landing' relative='path' style={{padding:'5em'}}>
-                <i className="fas fa-sharp fa-regular fa-arrow-left fa-2xl" ></i>
-            </Link>
-            
+
             <Container className="d-flex justify-content-center  "> 
                 <Card style={{width:'45em', position:'absolute'}} >
 
@@ -35,6 +32,7 @@ const Login = () => {
                         <Link to='/Dashboard' relative='path'>
                             <Button variant="dark">Sign In</Button>
                         </Link>
+                        
                     </Card.Body>
 
                     <Card.Footer>
@@ -42,8 +40,6 @@ const Login = () => {
                         <Link to='/ForgotPassword' relative='path'>
                             <Button variant="link" style={{color:"blue"}}>Forgot Password?</Button>
                         </Link>
-
-
 
                     </Card.Footer>
                 </Card>

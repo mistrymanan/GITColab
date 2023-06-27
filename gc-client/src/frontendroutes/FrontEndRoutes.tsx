@@ -9,6 +9,7 @@ import ForgotPassword from '../view/ForgotPassword/ForgotPassword';
 import ResetPassword from '../view/ForgotPassword/ResetPassword';
 import Login from '../view/Login/Login';
 import Registration from "../view/Registration/Registration";
+import Otp from "../view/ForgotPassword/Otp";
 
 const FrontEndRoutes = () => {
 
@@ -26,6 +27,7 @@ const FrontEndRoutes = () => {
                 <Route path='/ResetPassword' Component={ResetPassword}/>
                 <Route path='/Login' Component={Login}/>
                 <Route path='/Registration' Component={Registration}/>
+                <Route path='/Otp' Component={Otp}/>
             </Routes>
         </>
     )
