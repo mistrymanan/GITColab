@@ -17,6 +17,8 @@ public class UserRowMapper implements RowMapper<User> {
                 .password(rs.getString("password"))
                 .firstName(rs.getString("firstName"))
                 .lastName(rs.getString("lastName"))
+                .otp(rs.getString("otp"))
+                .otpExpiry(rs.getString("otpExpiry"))
                 .build();
         return user;
     }

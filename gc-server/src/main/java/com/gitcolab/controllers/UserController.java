@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     @GetMapping()
     public ResponseEntity<UserDTO> getUserExample(){
-
         return ResponseEntity.ok(new UserDTO("username"));
     }
 }

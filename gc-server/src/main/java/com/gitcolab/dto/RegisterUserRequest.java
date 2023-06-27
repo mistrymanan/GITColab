@@ -34,4 +34,7 @@ public class RegisterUserRequest {
     @NotBlank
     @Size(min=2,max = 50)
     private String lastName;
+
+    public RegisterUserRequest(String username, String email, String password, String uFname, String uLname, String abc123, String s) {
+    }
 }

@@ -1,9 +1,6 @@
 package com.gitcolab.services;
 
-import com.gitcolab.dto.MessageResponse;
-import com.gitcolab.dto.RegisterUserRequest;
-import com.gitcolab.dto.TokenRefreshRequest;
-import com.gitcolab.dto.TokenRefreshResponse;
+import com.gitcolab.dto.*;
 import com.gitcolab.entity.RefreshToken;
 import com.gitcolab.entity.User;
 import com.gitcolab.repositories.UserRepository;
@@ -89,5 +86,18 @@ public class UserServiceTest {
         ResponseEntity<?> response = userService.registerUser(registerUserRequest);
         
         assertEquals(expectedResponse, response.getBody());
+    }
+
+    @Test
+    public void testResetPassword() {
+        ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest("abc@email.com", "ABC@123", "ABC@123");
+        User user = mock(User.class);
+
+        when(userRepository.existsByEmail(resetPasswordRequest.getEmail())).thenReturn(false);
+        when(userRepository.getUserByEmail(resetPasswordRequest.getEmail())).thenReturn(Optional.ofNullable(user));
+
+        ResponseEntity<?> response1 = userService.resetPassword(resetPasswordRequest);
+        assertEquals(new MessageResponse("Error: User is not exist in system!"), response1.getBody());
+
     }
 }

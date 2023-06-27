@@ -18,6 +18,9 @@ public class UserRepositoryImplementation implements UserRepository{
     }
 
     @Override
+    public int update(User user) { return userDao.update(user); }
+
+    @Override
     public boolean existsByUsername(String username) {
         return userDao.existsByUsername(username);
     }
@@ -36,5 +39,11 @@ public class UserRepositoryImplementation implements UserRepository{
     public Optional<User> findById(long id) {
         return userDao.get(id);
     }
+
+    @Override
+    public int saveOtp(User user) { return userDao.update(user); }
+
+    @Override
+    public Optional<User> getUserByEmail(String email) { return  userDao.getUserByEmail(email); }
 
 }

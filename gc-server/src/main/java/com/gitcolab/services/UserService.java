@@ -6,6 +6,8 @@ import com.gitcolab.entity.User;
 import com.gitcolab.exceptions.TokenRefreshException;
 import com.gitcolab.repositories.UserRepository;
 import com.gitcolab.security.jwt.JwtUtils;
+import com.gitcolab.utilities.EmailSender;
+import com.gitcolab.utilities.HelperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +17,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.Optional;
+
 @Service
 public class UserService {
     AuthenticationManager authenticationManager;
@@ -22,6 +27,8 @@ public class UserService {
     PasswordEncoder encoder;
     JwtUtils jwtUtils;
     RefreshTokenService refreshTokenService;
+    @Autowired
+    EmailSender emailSender;
     public UserService() {
 
     }
@@ -79,6 +86,67 @@ public class UserService {
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    public ResponseEntity<?> sendResetPasswordOTP(SendOTPRequest sendOTPRequest) {
+        if (!userRepository.existsByEmail(sendOTPRequest.getEmail())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: User is not exist in system!"));
+        }
+
+        Optional<User> user = userRepository.getUserByEmail(sendOTPRequest.getEmail());
+        if(!user.isPresent()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Something went wrong!"));
+        }
+        String otpExpiry = String.valueOf(Instant.now().plusSeconds(300).getEpochSecond());
+        String otp = HelperUtils.generateOTP(6);
+        user.get().setOtp(otp);
+        user.get().setOtpExpiry(otpExpiry);
+
+        boolean sendEmail = emailSender.sendEmail(sendOTPRequest.getEmail(),
+                "Password reset request | GitColab",
+                "Hello " + user.get().getFirstName() + ",\n\nVerification Code for reset password request: " + otp + "\n\nThank you,\nGitColab");
+
+        userRepository.update(user.get());
+        if(!sendEmail) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Something went wrong!"));
+        }
+        return ResponseEntity.ok(new MessageResponse("Verification Code sent successfully!"));
+    }
+
+    public ResponseEntity<?> validateResetPasswordOTP(ValidateOTPRequest validateOTPRequest) {
+        if (!userRepository.existsByEmail(validateOTPRequest.getEmail())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: User is not exist in system!"));
+        }
+        Optional<User> user = userRepository.getUserByEmail(validateOTPRequest.getEmail());
+        if(!user.isPresent()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Something went wrong!"));
+        }
+        boolean isValidOTP =user.get().getOtp().equals(validateOTPRequest.getOtp());
+        long otpExpiry = Instant.now().getEpochSecond();
+        boolean isValidOTPExpiry = Long.parseLong(user.get().getOtpExpiry()) <= otpExpiry;
+        if(!isValidOTP || !isValidOTPExpiry) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid OTP! Please try again"));
+        }
+        user.get().setOtp(null);
+        user.get().setOtpExpiry(null);
+        userRepository.update(user.get());
+        return ResponseEntity.ok(new MessageResponse("OTP verified successfully!"));
+    }
+
+    public ResponseEntity<?> resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        if (!userRepository.existsByEmail(resetPasswordRequest.getEmail())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: User is not exist in system!"));
+        }
+        Optional<User> user = userRepository.getUserByEmail(resetPasswordRequest.getEmail());
+        if(!user.isPresent()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Something went wrong!"));
+        }
+        if(!resetPasswordRequest.getPassword().equals(resetPasswordRequest.getConfirmPassword())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Password and Confirm Password are not same!"));
+        }
+        user.get().setPassword(encoder.encode(resetPasswordRequest.getPassword()));
+        userRepository.update(user.get());
+        return ResponseEntity.ok(new MessageResponse("Password reset successfully!"));
     }
 
 }
