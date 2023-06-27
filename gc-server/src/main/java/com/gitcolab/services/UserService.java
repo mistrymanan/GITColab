@@ -29,17 +29,15 @@ public class UserService {
     RefreshTokenService refreshTokenService;
     @Autowired
     EmailSender emailSender;
-    public UserService() {
-
-    }
 
     @Autowired
-    public UserService(AuthenticationManager authenticationManager, UserRepository userRepository, PasswordEncoder encoder, JwtUtils jwtUtils, RefreshTokenService refreshTokenService) {
+    public UserService(AuthenticationManager authenticationManager, UserRepository userRepository, PasswordEncoder encoder, JwtUtils jwtUtils, RefreshTokenService refreshTokenService, EmailSender emailSender) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
         this.refreshTokenService = refreshTokenService;
+        this.emailSender = emailSender;
     }
 
     public ResponseEntity<?> authenticateUser(LoginRequest loginRequest){
@@ -55,6 +53,7 @@ public class UserService {
         return ResponseEntity.ok(new JwtTokenResponse(jwt, refreshToken.getToken(), userDetails.getId(),
                 userDetails.getUsername(), userDetails.getEmail()));
     }
+
     public ResponseEntity<?> refreshtoken(TokenRefreshRequest request) {
         String requestRefreshToken = request.getRefreshToken();
 
@@ -135,16 +134,16 @@ public class UserService {
     }
 
     public ResponseEntity<?> resetPassword(ResetPasswordRequest resetPasswordRequest) {
-        if (!userRepository.existsByEmail(resetPasswordRequest.getEmail())) {
+        if (!userRepository.existsByEmail(resetPasswordRequest.getEmail()))
             return ResponseEntity.badRequest().body(new MessageResponse("Error: User is not exist in system!"));
-        }
+
         Optional<User> user = userRepository.getUserByEmail(resetPasswordRequest.getEmail());
-        if(!user.isPresent()) {
+        if(!user.isPresent())
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Something went wrong!"));
-        }
-        if(!resetPasswordRequest.getPassword().equals(resetPasswordRequest.getConfirmPassword())) {
+
+        if(!resetPasswordRequest.getPassword().equals(resetPasswordRequest.getConfirmPassword()))
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Password and Confirm Password are not same!"));
-        }
+
         user.get().setPassword(encoder.encode(resetPasswordRequest.getPassword()));
         userRepository.update(user.get());
         return ResponseEntity.ok(new MessageResponse("Password reset successfully!"));
