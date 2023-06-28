@@ -1,7 +1,14 @@
+import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header"
 
 const Dashboard = () => {
     return (
-        <h1>Dashboard View</h1>
+        <>
+            <Header/>
+                <h1>Dashboard View</h1>
+            
+            <Footer/>
+        </>
     )
 }
 

@@ -8,7 +8,7 @@ const Header = () => {
             <Navbar bg="dark" variant="dark" expand="lg" >
                 <Container className=''>
 
-                    <LinkContainer to='/'>
+                    <LinkContainer to='/dashboard'>
                         <Navbar.Brand >Github Collab</Navbar.Brand>
                     </LinkContainer>
 
@@ -36,13 +36,14 @@ const Header = () => {
                             </LinkContainer>
 
                             <LinkContainer to='/profile'>
-                                <Nav.Link><i className="fas fa-user"></i> Profile</Nav.Link>
+                                <Nav.Link>
+                                    <i className="fas fa-user"></i> Profile
+                                </Nav.Link>
                             </LinkContainer>
                         </Nav>
 
-
                     </Navbar.Collapse>
-
+                    
                 </Container>
             </Navbar>
         </header>
