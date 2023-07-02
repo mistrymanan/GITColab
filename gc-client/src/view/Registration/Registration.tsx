@@ -1,45 +1,46 @@
-import { Card, Button, Row, Col, Container } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Card, Button, Form } from "react-bootstrap";
+import "./registration.css";
 
 const Registration = () => {
-
     return (
-        <>
-
-            <Container className="d-flex justify-content-center "> 
-                <Card style={{width:'45em', position:'absolute'}}>
-
-                    <Card.Header style={{backgroundColor:"black"}}>
-                        <Row>
-                            <Col className="d-flex justify-content-center " >
-                                <Link to='/Login' relative='path'>
-                                    <Button variant="dark" style={{marginRight:'2em'}}>Sign In</Button>
-                                </Link>
-                                <div style={{width:'2px', backgroundColor:'white', height:'2em', minHeight:'100%'}}></div>
-                                <Link to='/Registration' relative='path'>
-                                    <Button variant="dark" style={{marginLeft:'2em'}}>Register</Button>
-                                </Link>
-                            </Col>
-                        </Row>
-                    </Card.Header>
-
-                    {/*Validation Event Handlers*/}
-                    <Card.Body>
-                        <h1>First Name</h1>
-                        <h1>Last Name</h1>
-                        <h1>Email</h1>
-                        <h1>Password</h1>
-                    </Card.Body>
-
-                    <Card.Footer>
-                        <Link to='/ForgotPassword' relative='path'>
-                            <Button variant="link" style={{color:"blue"}}>Forgot Password?</Button>
-                        </Link>
-                    </Card.Footer>
-
-                </Card>
-            </Container>
-        </>
+        <Card className="register-card">
+            <Card.Header><h1>Registration</h1></Card.Header>
+            <Card.Body>
+                <Form.Floating className="mb-3">
+                    <Form.Control
+                        id="firstname"
+                        type="text"
+                        placeholder="First Name"
+                    />
+                    <label htmlFor="firstname">First name</label>
+                </Form.Floating>
+                <Form.Floating className="mb-3">
+                    <Form.Control
+                        id="lastname"
+                        type="text"
+                        placeholder="Last name"
+                    />
+                    <label htmlFor="lastname">Last name</label>
+                </Form.Floating>
+                <Form.Floating className="mb-3">
+                    <Form.Control
+                        id="email"
+                        type="email"
+                        placeholder="name@example.com"
+                    />
+                    <label htmlFor="email">Email address</label>
+                </Form.Floating>
+                <Form.Floating className="mb-3">
+                    <Form.Control
+                        id="password"
+                        type="password"
+                        placeholder="Password"
+                    />
+                    <label htmlFor="password">Password</label>
+                </Form.Floating>
+                <Button variant="dark">Sign up</Button>
+            </Card.Body>
+        </Card>
     )
 }
 
