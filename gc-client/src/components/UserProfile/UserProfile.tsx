@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Card, Image, Badge } from 'react-bootstrap';
+import { Button, Card, Image } from 'react-bootstrap';
 import { FaLinkedin, FaGithub, FaCloud } from 'react-icons/fa';
 import ProfileEditModal from './ProfileEditModal/ProfileEditModal';
 

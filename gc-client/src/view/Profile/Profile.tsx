@@ -3,8 +3,6 @@ import { Container, Col, Row } from 'react-bootstrap';
 import Project from '../../components/Project/Project';
 import UserProfile from '../../components/UserProfile/UserProfile';
 import profileMockData from '../../model/ProfileMockData';
-import Header from '../../components/Header/Header';
-import Footer from '../../components/Footer/Footer';
 
 //sm = {12} md={6} lg = {4}
 
