@@ -1,6 +1,8 @@
 const Explore = () => {
     return (
-        <h1>Explore View</h1>
+        <>
+            <h1>Explore View</h1>
+        </>
     )
 }
 
