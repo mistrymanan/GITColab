@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import "./landing.css";
 import { selectUser } from "../../redux/userSlice";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 const Landing = () => {
     const isAuth = useSelector(selectUser);
@@ -11,7 +11,10 @@ const Landing = () => {
             {isAuth ? (
                 <Outlet />
             ) : (
-                <div className='landing'></div>
+                <>
+                    <Navigate to="/" />
+                    <div className='landing'></div>
+                </>
             )}
         </>
     )

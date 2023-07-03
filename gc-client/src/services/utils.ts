@@ -14,8 +14,9 @@ export async function postData(body: string, url: string, token?: string) {
         };
 
         const response = await axios.post(API_URL + url, body, requestOptions);
-        return response.data;
+        return response;
     } catch (error: any) {
-        console.log("error", error.response.data)
+        console.log("error", error.response.data);
+        return error;
     }
 }

@@ -1,5 +1,5 @@
 import { Card, Button, Form } from "react-bootstrap";
-import "./login.css";
+import "../style.css";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { loginUser } from "../../services/UserService";
@@ -10,24 +10,29 @@ const Login = () => {
     const [invalid, setInvalid] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [invalidCreds, setInvalidCreds] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleUsernameChange = (e: any) => {
         setUsername(e.target.value);
+        setInvalidCreds(false);
     };
 
     const handlePasswordChange = (e: any) => {
         setPassword(e.target.value);
+        setInvalidCreds(false);
     };
 
     const handleSubmit = async (event: any) => {
         const form = event.currentTarget;
         event.preventDefault();
         if (form.checkValidity() === true) {
-            const data = {username: username, password: password};
-            const token = await loginUser(data);
-            if(token != null) {
+            const data = { username: username, password: password };
+            const response = await loginUser(data);
+            let token;
+            if (response?.data) {
+                token = response.data.token;
                 dispatch(
                     login({
                         token: token
@@ -35,15 +40,18 @@ const Login = () => {
                 )
                 localStorage.setItem('token', token);
                 navigate('/dashboard');
+            } else {
+                event.stopPropagation();
+                setInvalidCreds(true);
             }
-        } else {            
+        } else {
             event.stopPropagation();
             setInvalid(true);
         }
     };
 
     return (
-        <Card className="login-card">
+        <Card className="auth-card">
             <Card.Header><h1>Login</h1></Card.Header>
             <Card.Body>
                 <Form noValidate validated={invalid} onSubmit={handleSubmit}>
@@ -75,9 +83,14 @@ const Login = () => {
                         </Form.Control.Feedback>
                         <label htmlFor="floatingPasswordCustom">Password</label>
                     </Form.Floating>
+                    {invalidCreds &&
+                        <Form.Group className="mt-1" controlId="invalidCreds">
+                            <Form.Label color="red">Invalid username or password.</Form.Label>
+                        </Form.Group>
+                    }
                     <Button variant="dark" type="submit">Sign In</Button>
                     <Form.Group className="mt-2" controlId="forgotPassword">
-                        <Form.Label><a href="/reset-password">Forgot password?</a></Form.Label>
+                        <Form.Label><a href="/forgot-password">Forgot password?</a></Form.Label>
                     </Form.Group>
                     <Form.Group className="" controlId="register">
                         <Form.Label><a href="/register">New user? Signup here first.</a></Form.Label>

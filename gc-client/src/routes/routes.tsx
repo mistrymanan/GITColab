@@ -21,8 +21,8 @@ const Router = () => {
                 <Route path='/login' element={isAuth ? <Navigate to="/dashboard" /> : <Login />}/>
                 <Route path='/register' element={isAuth ? <Navigate to="/dashboard"/> : <Registration />}/>
                 <Route path='/forgot-password' element={isAuth ? <Navigate to="/dashboard"/> : <ForgotPassword />}/>
+                <Route path='/forgot-password/otp' element={isAuth ? <Navigate to="/dashboard"/> : <Otp />}/>
                 <Route path='/reset-password' element={isAuth ? <Navigate to="/dashboard"/> : <ResetPassword />} />
-                <Route path='/reset-password/otp' element={isAuth ? <Navigate to="/dashboard"/> : <Otp />}/>
                 
                 <Route path='/' element={<Landing />}>
                     <Route path="/" element={ isAuth ? <Navigate to="/dashboard" /> : <Navigate to="/" />}/>
