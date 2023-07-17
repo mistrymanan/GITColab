@@ -48,6 +48,15 @@ public class UserTest {
     }
 
     @Test
+    public void testConstructorTwo() {
+        User newUser = new User("example@email.com", "B3L22P", "1600992087");
+
+        Assertions.assertEquals("example@email.com", newUser.getEmail());
+        Assertions.assertEquals("B3L22P", newUser.getOtp());
+        Assertions.assertEquals("1600992087", newUser.getOtpExpiry());
+    }
+
+    @Test
     public void testBuilderConstructor() {
         User newUser = User.builder()
                 .username("FNameLName")
