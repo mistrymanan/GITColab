@@ -13,4 +13,7 @@ import lombok.ToString;
 public class GithubAuthRequest {
     @NotBlank
     private String code;
+
+    @NotBlank
+    private String email;
 }

@@ -3,26 +3,42 @@ package com.gitcolab.services;
 import com.gitcolab.dto.GithubAuthRequest;
 import com.gitcolab.dto.GithubAuthTokenResponse;
 import com.gitcolab.dto.MessageResponse;
+import com.gitcolab.entity.EnumIntegrationType;
+import com.gitcolab.entity.Integration;
+import com.gitcolab.entity.User;
+import com.gitcolab.repositories.GithubRepository;
+import com.gitcolab.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.net.URI;
-import java.net.http.HttpRequest;
-import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class GithubService {
+
+    GithubRepository githubRepository;
+    UserRepository userRepository;
     @Value("${gitcolab.app.github.clientId}")
     private String CLIENT_ID;
 
     @Value("${gitcolab.app.github.clientSecret}")
     private String CLIENT_SECRET;
+
+    @Autowired
+    public GithubService(GithubRepository githubRepository, UserRepository userRepository) {
+        this.githubRepository = githubRepository;
+        this.userRepository = userRepository;
+    }
+
     public ResponseEntity<?> getAccessToken(GithubAuthRequest githubAuthRequest) {
         if (githubAuthRequest.getCode() == null || githubAuthRequest.getCode().isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Github auth code is invalid."));
+        }
+        if(githubAuthRequest.getEmail() == null || githubAuthRequest.getEmail().isEmpty()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Github auth code is invalid."));
         }
 
@@ -45,6 +61,18 @@ public class GithubService {
         String[] splitResponse = response.split("&");
         String accessToken = splitResponse[0].split("=")[1];
         String type = splitResponse[2].split("=")[1];
+
+        Optional<User> user = userRepository.getUserByEmail(githubAuthRequest.getEmail());
+        Optional<Integration> github = githubRepository.getByEmail(githubAuthRequest.getEmail());
+        if(!user.isPresent()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Github authentication failed."));
+        }
+        if(!github.isPresent()) {
+            githubRepository.save(new Integration(EnumIntegrationType.GITHUB, accessToken, user.get().getId()));
+        } else {
+            githubRepository.update(new Integration(EnumIntegrationType.GITHUB, accessToken, user.get().getId()));
+        }
+
         return ResponseEntity.ok(new GithubAuthTokenResponse(accessToken, type));
     }
 }
