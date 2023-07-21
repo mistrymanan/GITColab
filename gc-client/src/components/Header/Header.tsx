@@ -21,7 +21,7 @@ const Header = () => {
                 <Container className=''>
 
                     <LinkContainer to='/'>
-                        <Navbar.Brand >Github Collab</Navbar.Brand>
+                        <Navbar.Brand >Github Colab</Navbar.Brand>
                     </LinkContainer>
 
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -63,7 +63,6 @@ const Header = () => {
                                 </>
                             )}
                     </Navbar.Collapse>
-
                 </Container>
             </Navbar>
         </header>
