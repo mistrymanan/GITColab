@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form, Dropdown } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
 
 interface AddProjectModalProps {
     projectDetails: ProjectDetails;
@@ -39,7 +39,6 @@ const AdddProjectModal: React.FC<AddProjectModalProps> = ({
         if (form.checkValidity() === true) {
             const data = { repositoryName: repositoryName, isAtlassian: isAtlassian, jiraBoard: jiraBoard };
             if (data) {
-                console.log("working");
                 handleClose();
             }
         } else {

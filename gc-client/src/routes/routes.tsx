@@ -12,6 +12,7 @@ import Registration from "../view/Registration/Registration";
 import Otp from "../view/ForgotPassword/Otp";
 import { useSelector } from "react-redux";
 import { selectUser } from "../redux/userSlice";
+import ProjectDetails from "../view/Integration/ProjectDetails";
 
 const Router = () => {
     const isAuth = useSelector(selectUser);
@@ -30,7 +31,10 @@ const Router = () => {
                     <Route path='/profile' Component={Profile}/>
                     <Route path='/dashboard' Component={Dashboard}/>
                     <Route path='/explore' Component={Explore}/>
-                    <Route path='/integration' Component={Integration}/>
+                    <Route path='/integration' Component={Integration} />
+                        
+                    <Route path="/integration/:id" element={<ProjectDetails />}/>
+
                 </Route>
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>

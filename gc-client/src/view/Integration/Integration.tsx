@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import { MDBDataTableV5 } from 'mdbreact';
 import AdddProjectModal from "./AddProjectModal";
+import { useNavigate } from "react-router";
 
 const Integration = () => {
     const [authenticated, setAuthenticated] = useState(true);
     const [openAddProjectModal, setOpenAddProjectModal] = useState(false);
     const clientId = "098e442d98a100074b33";   // TODO: handle env
+    const navigate = useNavigate();
 
     const handleGithubLogin = () => {
         window.location.assign("https://github.com/login/oauth/authorize?client_id=" + clientId + "&scope=public_repo");
@@ -27,18 +29,22 @@ const Integration = () => {
         }
     ]
 
+    const handleClick = (id: any) => {
+        navigate(`/integration/${id}`);
+    }
+
     const rows: any[] = [
-        { projectName: "Gitcolab" },
-        { projectName: "Text Classification" },
-        { projectName: "Module Federation" },
+        { projectName: "Gitcolab", clickEvent: () => handleClick(1) },
+        { projectName: "Text Classification", clickEvent: () => handleClick(2) },
+        { projectName: "Module Federation", clickEvent: () => handleClick(3) },
     ]
 
     return (
         <>
             {authenticated ? (
                 <Container className="mt-3">
-                    <div className="d-flex flex-row my-2 justify-content-between">
-                        <h1 className='py-3' >Projects</h1>
+                    <div className="d-flex flex-row my-2 justify-content-between py-3">
+                        <h1>Projects</h1>
                         <Button variant="dark" type="button" onClick={addProjectFlowHandler}>Add New Project Flow</Button>
                     </div>
                     <MDBDataTableV5 data={{ rows, columns }} bordered hover></MDBDataTableV5>
