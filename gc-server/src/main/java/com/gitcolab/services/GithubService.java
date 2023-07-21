@@ -48,8 +48,6 @@ public class GithubService {
             return ResponseEntity.badRequest().body(new MessageResponse("Github auth code is invalid."));
         }
 
-        String scope = "public_repo";
-
         StringBuilder githubAuthUrl = new StringBuilder("https://github.com/login/oauth/access_token");
         githubAuthUrl.append("?client_id=" + CLIENT_ID);
         githubAuthUrl.append("&client_secret=" + CLIENT_SECRET);
