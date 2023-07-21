@@ -5,7 +5,8 @@ import AdddProjectModal from "./AddProjectModal";
 import { useNavigate } from "react-router";
 
 const Integration = () => {
-    const [authenticated, setAuthenticated] = useState(true);
+    // const [authenticated, setAuthenticated] = useState(true);
+    const authenticated = true;
     const [openAddProjectModal, setOpenAddProjectModal] = useState(false);
     const clientId = "098e442d98a100074b33";   // TODO: handle env
     const navigate = useNavigate();
