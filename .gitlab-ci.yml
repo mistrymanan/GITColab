@@ -44,7 +44,7 @@ test:client:
   stage: test
   script:
     - cd gc-client
-    - npm install
+    - npm install --force
     - npm test
 
 deploy:
