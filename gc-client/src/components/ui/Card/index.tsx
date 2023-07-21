@@ -1,28 +1,22 @@
-import React from 'react';
-import {
-  MDBBtn,
-  MDBCard,
-  MDBCardBody,
-  MDBCardImage,
-  MDBCardTitle,
-  MDBCardText,
-  MDBCol
-} from 'mdbreact';
+import { Card } from "react-bootstrap"
 
-const Card = (props: any) => {
+const CardComponent = (props: any) => {
   return (
-    <MDBCol style={{ maxWidth: "22rem" }}>
-      <MDBCard>
-        <MDBCardImage className="img-fluid" src="https://mdbootstrap.com/img/Mockups/Lightbox/Thumbnail/img%20(67).webp"
-          waves />
-        <MDBCardBody>
-          <MDBCardTitle>Card title</MDBCardTitle>
-          <MDBCardText>Some quick example text to build on the card title and make up the bulk of the card's content.</MDBCardText>
-          <MDBBtn href="#">Click</MDBBtn>
-        </MDBCardBody>
-      </MDBCard>
-    </MDBCol>
+    <Card className="my-3 p-3 rounded" border="secondary" style={{ width: '18rem' }}>
+      <Card.Img variant="top" src="https://1000logos.net/wp-content/uploads/2021/05/GitHub-logo.png" alt="Repo Image" />
+
+      <Card.Body>
+        <Card.Title><h4>Repo Title</h4></Card.Title>
+        <Card.Text className="my-1"><h5>Repo Name - Repo Owner</h5></Card.Text>
+        <Card.Text as='p'>Repo Description</Card.Text>
+        <Card.Text as='p'>
+          5 <i className="fas fa-solid fa-star" />'s
+          5 <i className="fas fa-solid fa-code-branch" />'s
+          5 <i className="fas fa-solid fa-exclamation-circle" />'s
+        </Card.Text>
+      </Card.Body>
+    </Card>
   )
 }
 
-export default Card;
+export default CardComponent;
