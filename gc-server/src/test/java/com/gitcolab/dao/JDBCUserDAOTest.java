@@ -5,6 +5,7 @@ import com.gitcolab.utilities.UserRowMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
@@ -136,4 +137,20 @@ class JDBCUserDAOTest {
 
         verify(jdbcTemplate).queryForObject(anyString(), any(Object[].class), any(Class.class));
     }
+
+    /*
+    Need to write this test
+    @Override
+    public int updateProfile(Object o) {
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(o);
+        return namedParameterJdbcTemplate
+                .update("UPDATE users SET `username` = :username,`email` = :email,`password` = :password,`firstName` = :firstName," +
+                                "`lastName` = :lastName, `otp` = :otp, `otpExpiry` = :otpExpiry," +
+                                "`organization` = :organization, `location` = :location, `description` = :description, `linkedin` = :linkedin, `github` = :github," +
+                                "`resume` = :resume" +
+                                " WHERE `email` = :email"
+                        ,namedParameters);
+    }
+    */
+
 }

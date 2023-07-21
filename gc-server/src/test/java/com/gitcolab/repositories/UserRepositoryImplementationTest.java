@@ -68,4 +68,10 @@ class UserRepositoryImplementationTest {
         verify(userDao, times(1)).existsByUsername(username);
     }
 
+    /*
+    Need to write this test
+    @Override
+    public int updateProfile(User user) { return userDao.updateProfile(user); }
+    * */
+
 }

@@ -1,4 +1,4 @@
-import { postData } from "./utils";
+import { postData, putData } from "./utils";
 
 export async function loginUser(userData: any) {
     if(userData && ( userData.username == null || userData.password == null )) return null;
@@ -30,5 +30,18 @@ export async function validateVerificationCode(userData: any) {
 export async function resetPassword(userData: any) {
     if(!userData) return null;
     const response = await postData(userData, "/auth/reset-password");
+    return response;
+}
+
+/* Implement a service to handle updating user profile data */
+
+export async function updateUserProfile(userData: any){
+
+    if(!userData) return null;
+   
+    //api endpoint for updating user data -> error being thrown here
+    
+    const response = await postData(userData, "/user/userProfile", localStorage.getItem('token')!);
+
     return response;
 }

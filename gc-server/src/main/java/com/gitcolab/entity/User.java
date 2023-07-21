@@ -24,6 +24,16 @@ public class User {
     private String otp;
     private String otpExpiry;
 
+    /*added fields for updating*/
+    private  String organization;
+    private  String location;
+    private  String description;
+    private  String linkedin;
+    private  String github;
+    private  String resume;
+
+
+
     public User(String username, String email, String password, String firstName, String lastName) {
         this.username = username;
         this.email = email;
@@ -40,4 +50,17 @@ public class User {
 
     public User(String username, String email, String password, String uFname, String uLname, String abc123, String s) {
     }
+
+    //new constructor for updating user...not sure if should be here. should probably update the main constructor done by manan.
+    public User(String username, String organization, String location, String description, String linkedin, String github, String resume, String x) {
+        this.username = username;
+        this.organization = organization;
+        this.location = location;
+        this.description = description;
+        this.linkedin = linkedin;
+        this.github = github;
+        this.resume = resume;
+    }
+
+
 }

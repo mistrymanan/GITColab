@@ -39,6 +39,13 @@ const Login = () => {
                     })
                 )
                 localStorage.setItem('token', token);
+                //believe that we need to store entire user data to local storage
+
+                //decrypt token then make api calls with that.
+
+                localStorage.setItem('userProfile', JSON.stringify(response.data));
+                //const currentUser = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                
                 navigate('/dashboard');
             } else {
                 event.stopPropagation();

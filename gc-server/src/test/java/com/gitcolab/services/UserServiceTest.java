@@ -438,4 +438,27 @@ public class UserServiceTest {
         verify(emailSender, never()).sendEmail(anyString(), anyString(), anyString());
     }
 
+    /*
+    Need to write this test
+     public ResponseEntity<?> updateUserProfile(UpdateUserProfileRequest updateUserProfileRequest) {
+
+        if (userRepository.existsByUsername(updateUserProfileRequest.getUsername())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+        }
+
+
+        Optional<User> user = userRepository.findByUsername(updateUserProfileRequest.getUsername());
+
+        user.get().setUsername(encoder.encode(updateUserProfileRequest.getUsername()));
+        user.get().setOrganization(encoder.encode(updateUserProfileRequest.getOrganization()));
+        user.get().setLocation(encoder.encode(updateUserProfileRequest.getLocation()));
+        user.get().setDescription(encoder.encode(updateUserProfileRequest.getDescription()));
+        user.get().setLinkedin(encoder.encode(updateUserProfileRequest.getLinkedIn()));
+        user.get().setGithub(encoder.encode(updateUserProfileRequest.getGithub()));
+        user.get().setResume(encoder.encode(updateUserProfileRequest.getResume()));
+
+        return ResponseEntity.ok(new MessageResponse("User Profile Updated successfully!"));
+    }
+   */
+
 }

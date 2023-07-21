@@ -13,6 +13,7 @@ import java.sql.SQLException;
 @SpringBootTest
 public class UserRowMapperTest {
 
+    /*Need to update this test*/
     @Test
     public void testMapRow() throws SQLException {
         // Mock the ResultSet and set up necessary values

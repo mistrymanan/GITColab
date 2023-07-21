@@ -66,4 +66,17 @@ public class JDBCUserDAO implements UserDAO{
     public boolean existsByEmail(String email) {
         return jdbcTemplate.queryForObject("select count(*) from users u where u.email=?",new Object[]{email},Integer.class)>0;
     }
+
+    //new method to eliminate confusion
+    @Override
+    public int updateProfile(Object o) {
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(o);
+        return namedParameterJdbcTemplate
+                .update("UPDATE users SET " +
+                                "`organization` = :organization, `location` = :location, `description` = :description, `linkedin` = :linkedin, `github` = :github," +
+                                "`resume` = :resume" +
+                                " WHERE `username` = :username"
+                        ,namedParameters);
+    }
+
 }

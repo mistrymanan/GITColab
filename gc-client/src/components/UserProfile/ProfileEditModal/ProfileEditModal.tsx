@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Dropdown } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { updateUserProfile } from '../../../services/UserService';
 
+/*Start of baseer's code*/
 interface ProfileEditModalProps {
   userProfile: UserProfileData;
   handleClose: () => void;
@@ -37,11 +40,38 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
       skills: selectedSkills,
     }));
   };
+  /*End of baseer's code*/
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+    
+    /*
+    my code per keyur's request but commented out for testing
+    //State handlers
+    const [username, setUsername] = useState('');
+    const [organization, setOrganization] = useState('');
+    const [location, setLocation] = useState('');
+    const [description, setDescription] = useState('');
+    const [linkedin, setLinkedin] = useState('');
+    const [github, setGithub] = useState('');
+    const [resume, setResume] = useState('');
+    const dispatch = useDispatch();
+  */
+
+  const handleSubmit = async (event: any) => {
     // Perform the profile update logic here, e.g., make an API request
-    console.log('Updated profile data:', formData);
+    const form = event.currentTarget;
+    event.preventDefault();
+
+    if(form.checkValidity() === true){
+      const currentUser = JSON.parse(localStorage.getItem('userProfile') || '{}');
+      const data = {username : currentUser["username"], organization: formData.organization, location: 
+                    formData.location, description: formData.description, linkedin: formData.linkedin, 
+                    github: formData.github, resume: formData.resume}
+  
+      const response = await updateUserProfile(data);
+      console.log(response);
+    }
+
+    
     handleClose();
   };
 
@@ -52,6 +82,8 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
+          {/* user's will not be allowed to change their usernames
+          
           <Form.Group controlId="username">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -60,7 +92,9 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
               value={formData.username}
               onChange={handleChange}
             />
+            
           </Form.Group>
+          */}
           <Form.Group controlId="organization">
             <Form.Label>Organization</Form.Label>
             <Form.Control

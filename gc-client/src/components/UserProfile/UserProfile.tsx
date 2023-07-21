@@ -42,18 +42,24 @@ displayname,
     setShowEditModal(false);
   };
 
+  const currentUser = JSON.parse(localStorage.getItem('userProfile') || '{}');
+  
+ 
   return (
     <Card className="user-profile">
-
+    
       <Image src="https://blog.linkedin.com/content/dam/blog/en-us/corporate/blog/2014/07/Anais_Saint-Jude_L4388_SQ.jpg.jpeg" alt="Profile Picture" rounded className="profile-picture" />
       <Card.Body>
 
-        <Card.Title>
-          {displayname}
+        <Card.Title style={{"paddingBottom":10}}>
+          {/*displayname*/}
+          {currentUser["username"]}
         </Card.Title>
+        {/*
         <Card.Subtitle>
-        {username}
-        </Card.Subtitle>
+        username
+        {currentUser["username"]}
+        </Card.Subtitle>*/}
         <Card.Text>Followers: {followers}</Card.Text>
         <Card.Text>Following: {following}</Card.Text>
         <Card.Text>Stars: {stars}</Card.Text>
