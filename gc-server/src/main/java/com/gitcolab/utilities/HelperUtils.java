@@ -15,4 +15,15 @@ public class HelperUtils {
         return otp.toString();
     }
 
+    public static boolean isValidString(String value) {
+        try {
+            if(value == null || value.isEmpty() || value.isBlank()) {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
 }

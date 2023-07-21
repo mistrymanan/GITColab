@@ -2,12 +2,15 @@ package com.gitcolab.services;
 
 import com.gitcolab.dto.GithubAuthRequest;
 import com.gitcolab.dto.GithubAuthTokenResponse;
+import com.gitcolab.dto.GithubRepositoryRequest;
 import com.gitcolab.dto.MessageResponse;
 import com.gitcolab.entity.EnumIntegrationType;
 import com.gitcolab.entity.Integration;
 import com.gitcolab.entity.User;
 import com.gitcolab.repositories.GithubRepository;
 import com.gitcolab.repositories.UserRepository;
+import com.gitcolab.utilities.HelperUtils;
+import org.kohsuke.github.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +18,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,6 +47,8 @@ public class GithubService {
         if(githubAuthRequest.getEmail() == null || githubAuthRequest.getEmail().isEmpty()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Github auth code is invalid."));
         }
+
+        String scope = "public_repo";
 
         StringBuilder githubAuthUrl = new StringBuilder("https://github.com/login/oauth/access_token");
         githubAuthUrl.append("?client_id=" + CLIENT_ID);
@@ -74,5 +82,30 @@ public class GithubService {
         }
 
         return ResponseEntity.ok(new GithubAuthTokenResponse(accessToken, type));
+    }
+
+    public ResponseEntity<?> generateRepository(GithubRepositoryRequest githubRepositoryRequest) {
+        ResponseEntity sanitizationResponse = sanitizeGithubRepositoryRequest(githubRepositoryRequest);
+        if(sanitizationResponse != null) return sanitizationResponse;
+        try {
+            GitHub github = new GitHubBuilder().withOAuthToken(githubRepositoryRequest.getGithubAccessToken()).build();
+            GHCreateRepositoryBuilder repo = github.createRepository(githubRepositoryRequest.getRepositoryName());
+            GHRepository created = repo.create();
+            return ResponseEntity.badRequest().body(new MessageResponse("Github repository created."));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new MessageResponse("Github facing issue."));
+        }
+    }
+
+    private ResponseEntity<MessageResponse> sanitizeGithubRepositoryRequest(GithubRepositoryRequest githubRepositoryRequest) {
+        if(githubRepositoryRequest == null) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Github repository request is empty"));
+        }
+        if(!HelperUtils.isValidString(githubRepositoryRequest.getGithubAccessToken()))
+            return ResponseEntity.badRequest().body(new MessageResponse("Github authentication failed."));
+        if(!HelperUtils.isValidString(githubRepositoryRequest.getRepositoryName()))
+            return ResponseEntity.badRequest().body(new MessageResponse("Repository name is empty."));
+        return null;
     }
 }
