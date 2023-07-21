@@ -27,6 +27,7 @@ const Explore = () => {
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>
+                
                 <div className="d-flex flex-wrap justify-content-between my-2">
                     <CardComponent />
                     <CardComponent />
