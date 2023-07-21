@@ -1,5 +1,5 @@
 import { Card, Button } from "react-bootstrap"
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const CardComponent = (props: any) => {
@@ -7,9 +7,8 @@ const CardComponent = (props: any) => {
 
     return (
         <>
-            <ToastContainer />
-            <Card className="my-3 p-3 rounded" border="secondary" style={{ width: '18rem' }}>
-                <a href="#" target="_blank" rel="noopener noreferrer">
+            <Card className="m-3 p-3 rounded" border="secondary" style={{ width: '18rem' }}>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">
                     <Card.Img variant="top" src="https://1000logos.net/wp-content/uploads/2021/05/GitHub-logo.png" alt="Repo Image" />
                 </a>
                 <Card.Body>
