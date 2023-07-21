@@ -1,2 +1,0 @@
-// sample UI component
-export {};
