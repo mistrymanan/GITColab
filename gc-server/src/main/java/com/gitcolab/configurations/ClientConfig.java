@@ -11,7 +11,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 @Configuration
 public class ClientConfig {
     @Bean
-    AtlassianServiceClient atlassianServiceClient(){
+    public AtlassianServiceClient atlassianServiceClient(){
         WebClient webClient=WebClient.builder()
                 .baseUrl("https://api.atlassian.com")
                 .build();
