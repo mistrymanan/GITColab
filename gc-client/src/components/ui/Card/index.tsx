@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const CardComponent = (props: any) => {
-    const notify = () => toast("Invitation has been sent!");
+    const notify = () => toast.success("Invitation has been sent!");  
 
     return (
         <>
