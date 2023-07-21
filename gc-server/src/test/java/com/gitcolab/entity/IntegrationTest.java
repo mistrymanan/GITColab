@@ -22,9 +22,8 @@ public class IntegrationTest {
 
     @Test
     public void testIntegrationConstructorWithAllArgs() {
-        Integration integration1 = new Integration(1, EnumIntegrationType.GITHUB, "repoId", "token", 1);
+        Integration integration1 = new Integration(EnumIntegrationType.GITHUB, "repoId", "token", 1);
 
-        Assertions.assertEquals(1, integration1.getId());
         Assertions.assertEquals(EnumIntegrationType.GITHUB, integration1.getType());
         Assertions.assertEquals("repoId", integration1.getRepositoryId());
         Assertions.assertEquals("token", integration1.getToken());

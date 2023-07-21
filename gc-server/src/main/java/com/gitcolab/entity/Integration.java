@@ -17,10 +17,14 @@ public class Integration {
     private String token;
     private long userId;
 
+    private String typeString;
+
     public Integration(EnumIntegrationType type, String token, long userId) {
         this.type = type;
         this.token = token;
         this.userId = userId;
+
+        this.typeString = type.toString();
     }
 
     public Integration(EnumIntegrationType type, String repositoryId, String token, long userId) {
