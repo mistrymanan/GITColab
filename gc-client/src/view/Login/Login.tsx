@@ -35,7 +35,8 @@ const Login = () => {
                 token = response.data.token;
                 dispatch(
                     login({
-                        token: token
+                        token: token,
+                        username: username 
                     })
                 )
                 localStorage.setItem('token', token);
