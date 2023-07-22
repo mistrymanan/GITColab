@@ -12,6 +12,10 @@ const Header = () => {
     const handleSignOut = () => {
         dispatch(logout());
         localStorage.removeItem('token');
+        localStorage.removeItem('email');
+        localStorage.removeItem('username');
+        localStorage.removeItem('id');
+        localStorage.removeItem('refreshToken');
         navigate('/');
     }
 

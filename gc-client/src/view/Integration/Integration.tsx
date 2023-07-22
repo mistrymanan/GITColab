@@ -9,10 +9,9 @@ import { login, selectUser } from "../../redux/userSlice";
 import { getGithubAccessToken } from "../../services/GithubService";
 
 const Integration = () => {
-    const [authenticated, setAuthenticated] = useState(false);
     const [githubAuthenticated, setGithubAuthenticated] = useState("");
+    const [atlassianAuthenticated, setAtlassianAuthenticated] = useState("");
     const [openAddProjectModal, setOpenAddProjectModal] = useState(false);
-    // const clientId = "098e442d98a100074b33";   // TODO: handle env
     const clientId = GITHUB_CLIENT_ID;
     const scope = GITHUB_SCOPE;
     const navigate = useNavigate();
@@ -24,40 +23,33 @@ const Integration = () => {
     }
 
     useEffect(() => {
-        if (githubAuthenticated !== "") {
+        const url = new URL(window.location.href);
+        const githubCode = url.search.replace("?code=", "");
+        if (githubCode && githubAuthenticated === "") {
+            console.log("TOKEN==G==", githubAuthenticated);
             const fetchData = async () => {
                 const data = {
-                    "email": "parthmehta2016@gmail.com",
-                    "code": "685f0b0404159829e9a1"
+                    "email": userDataStore.email,
+                    "code": githubCode
                 };
                 const response = await getGithubAccessToken(data, userDataStore.token);
-                console.log("HERE WORK===>", response);
+                if (response?.data) {
+                    const storeObj = {
+                        ...userDataStore,
+                        githubToken: response.data.token
+                    };
+                    dispatch(
+                        login(storeObj)
+                    )
+                }
+                setGithubAuthenticated(response.data.token);
+                setAtlassianAuthenticated("");
             }
 
             fetchData();
-
-            // TODO: get accesstoken
-            // console.log("HERE+===>", userDataStore);
-            // dispatch(
-            //     login({
-            //         ...userDataStore,
-            //         github: {
-            //             code: githubAuthenticated,
-            //             token: null
-            //         }
-            //     })
-            // )
-            // console.log("BEFORE===>", userDataStore);
-            // navigate('/integration');
-            // console.log("AFTER===>", userDataStore);
+            navigate('/integration');
         }
-        const url = new URL(window.location.href);
-        const githubCode = url.search.replace("?code=", "");
-        console.log("GITHUB TOKEN====>", githubCode);
-        if (githubCode) {
-            setGithubAuthenticated(githubCode);
-        }
-    }, [githubAuthenticated, userDataStore.token]);
+    }, [dispatch, githubAuthenticated, navigate, userDataStore, userDataStore.email, userDataStore.token]);
 
     const handleModalClose = () => {
         setOpenAddProjectModal(false);
@@ -86,7 +78,7 @@ const Integration = () => {
 
     return (
         <>
-            {authenticated ? (
+            {(githubAuthenticated !== "" && atlassianAuthenticated !== "") ? (
                 <Container className="mt-3">
                     <div className="d-flex flex-row my-2 justify-content-between py-3">
                         <h1>Projects</h1>
@@ -100,9 +92,11 @@ const Integration = () => {
                 </Container>
             ) : (
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "calc(100vh - 88px)", flexDirection: "column" }}>
-                    <h4>You are not authenticated with github and atlassian.</h4>
+                    <h4>{`You are not authenticated with github or atlassian.`}</h4>
                     <div className="d-flex">
-                        <Button variant="dark" type="button" onClick={handleGithubLogin} className="mx-2">Add Github</Button>
+                        {userDataStore.githubToken == null && (
+                            <Button variant="dark" type="button" onClick={handleGithubLogin} className="mx-2">Add Github</Button>
+                        )}
                         <Button variant="dark" type="button" onClick={handleGithubLogin} className="mx-2">Add Atlassian</Button>
                     </div>
                 </div>
