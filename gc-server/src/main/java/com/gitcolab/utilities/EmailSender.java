@@ -1,6 +1,9 @@
 package com.gitcolab.utilities;
 
 
+import com.gitcolab.services.RefreshTokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailSender {
+    Logger logger = LoggerFactory.getLogger(EmailSender.class);
     @Autowired
     private JavaMailSender javaMailSender;
 
@@ -24,6 +28,7 @@ public class EmailSender {
             javaMailSender.send(msg);
             return true;
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return false;
         }
     }
