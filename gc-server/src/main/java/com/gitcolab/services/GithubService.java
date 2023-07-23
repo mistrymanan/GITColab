@@ -7,7 +7,7 @@ import com.gitcolab.dto.MessageResponse;
 import com.gitcolab.entity.EnumIntegrationType;
 import com.gitcolab.entity.Integration;
 import com.gitcolab.entity.User;
-import com.gitcolab.repositories.GithubRepository;
+import com.gitcolab.repositories.IntegrationRepository;
 import com.gitcolab.repositories.UserRepository;
 import com.gitcolab.utilities.HelperUtils;
 import org.kohsuke.github.*;
@@ -19,14 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class GithubService {
 
-    GithubRepository githubRepository;
+    IntegrationRepository integrationRepository;
     UserRepository userRepository;
     @Value("${gitcolab.app.github.clientId}")
     private String CLIENT_ID;
@@ -35,8 +33,8 @@ public class GithubService {
     private String CLIENT_SECRET;
 
     @Autowired
-    public GithubService(GithubRepository githubRepository, UserRepository userRepository) {
-        this.githubRepository = githubRepository;
+    public GithubService(IntegrationRepository integrationRepository, UserRepository userRepository) {
+        this.integrationRepository = integrationRepository;
         this.userRepository = userRepository;
     }
 
@@ -69,14 +67,14 @@ public class GithubService {
         String type = splitResponse[2].split("=")[1];
 
         Optional<User> user = userRepository.getUserByEmail(githubAuthRequest.getEmail());
-        Optional<Integration> github = githubRepository.getByEmail(githubAuthRequest.getEmail());
+        Optional<Integration> github = integrationRepository.getByEmail(githubAuthRequest.getEmail(),EnumIntegrationType.GITHUB);
         if(!user.isPresent()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Github authentication failed."));
         }
         if(!github.isPresent()) {
-            githubRepository.save(new Integration(EnumIntegrationType.GITHUB, accessToken, user.get().getId()));
+            integrationRepository.save(new Integration(EnumIntegrationType.GITHUB, accessToken, user.get().getId()));
         } else {
-            githubRepository.update(new Integration(EnumIntegrationType.GITHUB, accessToken, user.get().getId()));
+            integrationRepository.update(new Integration(EnumIntegrationType.GITHUB, accessToken, user.get().getId()));
         }
 
         return ResponseEntity.ok(new GithubAuthTokenResponse(accessToken, type));

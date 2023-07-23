@@ -22,6 +22,20 @@ class AtlassianServiceClientTest {
     AtlassianServiceClient atlassianServiceClient;
 
     @Test
+    public void testGetAccessToken(){
+        GetAccessTokenResponse response=new GetAccessTokenResponse("access_token","3600","JIRA:WORK");
+
+        when(atlassianServiceClient.getAccessToken(any())).thenReturn(new ResponseEntity(response,HttpStatus.OK));
+
+
+        ResponseEntity<GetAccessTokenResponse> getAccessTokenResponse = atlassianServiceClient.getAccessToken(new GetAccessTokenRequest());
+
+        assertEquals(HttpStatus.OK,getAccessTokenResponse.getStatusCode());
+
+        assertEquals(response,getAccessTokenResponse.getBody());
+    }
+
+    @Test
     public void testGetAccessibleResources_Success() {
 
         String bearerToken = "SAMPLE_BEARER_TOKEN";
