@@ -11,6 +11,10 @@ import org.springframework.web.service.annotation.PostExchange;
 import java.util.List;
 
 public interface AtlassianServiceClient {
+
+    @PostExchange("/oauth/token")
+    ResponseEntity<GetAccessTokenResponse> getAccessToken(@RequestBody GetAccessTokenRequest getAccessTokenRequest);
+
 //    https://api.atlassian.com
     @GetExchange("/oauth/token/accessible-resources")
     List<AccessibleResource> getAccessibleResources(@RequestHeader("Authorization") String bearerToken);

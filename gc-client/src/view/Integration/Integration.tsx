@@ -3,10 +3,15 @@ import { Button, Container } from "react-bootstrap";
 import { MDBDataTableV5 } from 'mdbreact';
 import AdddProjectModal from "./AddProjectModal";
 import { useNavigate } from "react-router";
-import { GITHUB_CLIENT_ID, GITHUB_SCOPE } from "../../credentials";
+import {
+    ATLASSIAN_CLIENT_ID,
+    ATLASSIAN_URL,
+    GITHUB_CLIENT_ID,
+    GITHUB_SCOPE
+} from "../../credentials";
 import { useDispatch, useSelector } from "react-redux";
 import { login, selectUser } from "../../redux/userSlice";
-import { getGithubAccessToken } from "../../services/GithubService";
+import {getAtlassianAccessToken, getGithubAccessToken} from "../../services/AuthService";
 
 const Integration = () => {
     const [githubAuthenticated, setGithubAuthenticated] = useState("");
@@ -17,20 +22,28 @@ const Integration = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const userDataStore = useSelector(selectUser);
+    const atlassianURL = ATLASSIAN_URL;
+    const atlassianClientId= ATLASSIAN_CLIENT_ID;
 
     const handleGithubLogin = () => {
         window.location.assign(`https://github.com/login/oauth/authorize?client_id=${clientId}&scope=${scope}`);
     }
+    const handleAtlassianLogin = () => {
+        window.location.assign(atlassianURL);
+        console.log("--"+window.location.href);
+    }
 
     useEffect(() => {
         const url = new URL(window.location.href);
-        const githubCode = url.search.replace("?code=", "");
-        if (githubCode && githubAuthenticated === "") {
+        console.log("URL->"+url);
+        const authenticationCode = url.search.replace("?code=", "");
+        console.log("githubcode->"+authenticationCode);
+        if (authenticationCode!="" && authenticationCode.length<=100 && githubAuthenticated === "") {
             console.log("TOKEN==G==", githubAuthenticated);
             const fetchData = async () => {
                 const data = {
                     "email": userDataStore.email,
-                    "code": githubCode
+                    "code": authenticationCode
                 };
                 const response = await getGithubAccessToken(data, userDataStore.token);
                 if (response?.data) {
@@ -43,7 +56,31 @@ const Integration = () => {
                     )
                 }
                 setGithubAuthenticated(response.data.token);
-                setAtlassianAuthenticated("");
+                // setAtlassianAuthenticated("");
+            }
+
+            fetchData();
+            navigate('/integration');
+        }
+        else if(authenticationCode.length>100 && atlassianAuthenticated===''){
+            const fetchData = async () => {
+                const data = {
+                    "grant_type":"authorization_code",
+                    "client_id":atlassianClientId,
+                    "redirect_uri":"http://localhost:3000/integration",
+                    "code": authenticationCode
+                };
+                const response = await getAtlassianAccessToken(data, userDataStore.token);
+                if (response?.data) {
+                    const storeObj = {
+                        ...userDataStore,
+                        atlassianToken: response.data.access_token
+                    };
+                    dispatch(
+                        login(storeObj)
+                    )
+                }
+                setAtlassianAuthenticated(response.data.access_token);
             }
 
             fetchData();
@@ -78,7 +115,7 @@ const Integration = () => {
 
     return (
         <>
-            {(githubAuthenticated !== "" && atlassianAuthenticated !== "") ? (
+            {( userDataStore.githubToken && userDataStore.atlassianToken ) ? (
                 <Container className="mt-3">
                     <div className="d-flex flex-row my-2 justify-content-between py-3">
                         <h1>Projects</h1>
@@ -97,7 +134,10 @@ const Integration = () => {
                         {userDataStore.githubToken == null && (
                             <Button variant="dark" type="button" onClick={handleGithubLogin} className="mx-2">Add Github</Button>
                         )}
-                        <Button variant="dark" type="button" onClick={handleGithubLogin} className="mx-2">Add Atlassian</Button>
+                        {userDataStore.atlassianToken == null && (
+                            <Button variant="dark" type="button" onClick={handleAtlassianLogin} className="mx-2">Add Atlassian</Button>
+                        )}
+
                     </div>
                 </div>
             )}
