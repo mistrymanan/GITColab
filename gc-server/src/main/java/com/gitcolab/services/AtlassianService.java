@@ -8,6 +8,7 @@ import com.gitcolab.entity.EnumIntegrationType;
 import com.gitcolab.entity.Integration;
 import com.gitcolab.repositories.IntegrationRepository;
 import com.gitcolab.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,10 @@ import java.util.Optional;
 
 @Service
 public class AtlassianService {
+
+
+    @Value("${gitcolab.app.atlassian.clientSecret}")
+    private String ATLASSIAN_CLIENT_SECRET;
     IntegrationRepository integrationRepository;
     UserRepository userRepository;
 
@@ -31,6 +36,8 @@ public class AtlassianService {
         if (getAccessTokenRequest.getCode() == null || getAccessTokenRequest.getCode().isEmpty()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Atlassian auth code is invalid."));
         }
+
+        getAccessTokenRequest.setClient_secret(ATLASSIAN_CLIENT_SECRET);
 
         AtlassianServiceClient atlassianServiceClient = clientConfig.atlassianServiceClient();
 
