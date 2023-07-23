@@ -24,7 +24,7 @@ const Header = () => {
             <Navbar bg="dark" variant="dark" expand="lg" >
                 <Container className=''>
 
-                    <LinkContainer to='/'>
+                    <LinkContainer to='/dashboard'>
                         <Navbar.Brand >Github Colab</Navbar.Brand>
                     </LinkContainer>
 
