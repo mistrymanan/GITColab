@@ -1,5 +1,6 @@
 package com.gitcolab.dao;
 
+import com.gitcolab.configurations.WebSecurityConfiguration;
 import com.gitcolab.entity.EnumIntegrationType;
 import com.gitcolab.entity.Integration;
 import com.gitcolab.utilities.IntegrationRowMapper;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
