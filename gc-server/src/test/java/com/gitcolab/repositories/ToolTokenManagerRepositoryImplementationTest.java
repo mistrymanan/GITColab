@@ -1,8 +1,8 @@
 package com.gitcolab.repositories;
 
-import com.gitcolab.dao.IntegrationDAO;
+import com.gitcolab.dao.ToolTokenManagerDAO;
 import com.gitcolab.entity.EnumIntegrationType;
-import com.gitcolab.entity.Integration;
+import com.gitcolab.entity.ToolTokenManager;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,18 +16,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class IntegrationRepositoryImplementationTest {
+class ToolTokenManagerRepositoryImplementationTest {
     @InjectMocks
-    private IntegrationRepositoryImplementation integrationRepository;
+    private ToolTokenManagerRepositoryImplementation integrationRepository;
 
     @Mock
-    private IntegrationDAO integrationDAO;
+    private ToolTokenManagerDAO integrationDAO;
 
     @Test
     public void testSave() {
-        Integration integration = new Integration();
+        ToolTokenManager integration = new ToolTokenManager();
         integration.setType(EnumIntegrationType.GITHUB);
-        integration.setRepositoryId("repo-id");
         integration.setToken("some-token");
         integration.setUserId(456L);
 
@@ -41,9 +40,8 @@ class IntegrationRepositoryImplementationTest {
 
     @Test
     public void testUpdate() {
-        Integration integration = new Integration();
+        ToolTokenManager integration = new ToolTokenManager();
         integration.setType(EnumIntegrationType.GITHUB);
-        integration.setRepositoryId("repo-id");
         integration.setToken("updated-token");
         integration.setUserId(456L);
 
@@ -59,12 +57,12 @@ class IntegrationRepositoryImplementationTest {
     public void testGetByEmail() {
         String email = "test@example.com";
         EnumIntegrationType integrationType = EnumIntegrationType.GITHUB;
-        Integration integration = new Integration();
+        ToolTokenManager integration = new ToolTokenManager();
         integration.setType(integrationType);
 
         when(integrationDAO.getByEmail(email, integrationType)).thenReturn(Optional.of(integration));
 
-        Optional<Integration> result = integrationRepository.getByEmail(email, integrationType);
+        Optional<ToolTokenManager> result = integrationRepository.getByEmail(email, integrationType);
 
         assertTrue(result.isPresent());
         assertEquals(integrationType, result.get().getType());
@@ -78,7 +76,7 @@ class IntegrationRepositoryImplementationTest {
 
         when(integrationDAO.getByEmail(email, integrationType)).thenReturn(Optional.empty());
 
-        Optional<Integration> result = integrationRepository.getByEmail(email, integrationType);
+        Optional<ToolTokenManager> result = integrationRepository.getByEmail(email, integrationType);
 
         assertFalse(result.isPresent());
         Mockito.verify(integrationDAO, times(1)).getByEmail(email, integrationType);
