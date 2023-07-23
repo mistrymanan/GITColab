@@ -1,9 +1,12 @@
 package com.gitcolab.dao;
 
+import com.gitcolab.configurations.WebSecurityConfiguration;
 import com.gitcolab.entity.Integration;
 import com.gitcolab.entity.User;
 import com.gitcolab.utilities.IntegrationRowMapper;
 import com.gitcolab.utilities.UserRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
@@ -16,6 +19,7 @@ import java.util.Optional;
 
 @Service
 public class JDBCGithubDAO implements GithubDAO {
+    Logger logger = LoggerFactory.getLogger(JDBCGithubDAO.class);
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired
@@ -56,6 +60,7 @@ public class JDBCGithubDAO implements GithubDAO {
         try {
             integration = jdbcTemplate.queryForObject("select * from Integration i where i.userId = (Select id from User u where u.email = ?)",new Object[]{email}, new IntegrationRowMapper());
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return Optional.empty();
         }
         return Optional.of(integration);

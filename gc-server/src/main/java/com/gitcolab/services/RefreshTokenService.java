@@ -4,6 +4,8 @@ import com.gitcolab.entity.RefreshToken;
 import com.gitcolab.exceptions.TokenRefreshException;
 import com.gitcolab.repositories.RefreshTokenRepository;
 import com.gitcolab.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import java.util.UUID;
 
 @Service
 public class RefreshTokenService {
+
+    Logger logger = LoggerFactory.getLogger(RefreshTokenService.class);
     @Value("${gitcolab.app.jwtRefreshExpirationMs}")
     private Long refreshTokenDurationMs;
 

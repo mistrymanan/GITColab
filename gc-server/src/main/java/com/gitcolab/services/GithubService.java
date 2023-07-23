@@ -11,6 +11,8 @@ import com.gitcolab.repositories.GithubRepository;
 import com.gitcolab.repositories.UserRepository;
 import com.gitcolab.utilities.HelperUtils;
 import org.kohsuke.github.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -25,7 +27,7 @@ import java.util.Optional;
 
 @Service
 public class GithubService {
-
+    Logger logger= LoggerFactory.getLogger(GithubService.class);
     GithubRepository githubRepository;
     UserRepository userRepository;
     @Value("${gitcolab.app.github.clientId}")
@@ -91,7 +93,7 @@ public class GithubService {
             GHRepository created = repo.create();
             return ResponseEntity.badRequest().body(new MessageResponse("Github repository created."));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Github facing issue."+e.getMessage());
             return ResponseEntity.badRequest().body(new MessageResponse("Github facing issue."));
         }
     }
