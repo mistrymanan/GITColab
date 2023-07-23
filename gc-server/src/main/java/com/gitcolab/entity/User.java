@@ -51,7 +51,6 @@ public class User {
     public User(String username, String email, String password, String uFname, String uLname, String abc123, String s) {
     }
 
-    //new constructor for updating user...not sure if should be here. should probably update the main constructor done by manan.
     public User(String username, String organization, String location, String description, String linkedin, String github, String resume, String x) {
         this.username = username;
         this.organization = organization;

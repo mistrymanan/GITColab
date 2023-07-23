@@ -11,35 +11,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-
     @Autowired
     UserService userService;
-
     @Autowired
     UserDAO userDao;
 
-
+    //need to fix this
     @GetMapping()
-    public ResponseEntity<?> getUser(){
+    public ResponseEntity<?> getUser(@RequestBody String userName){
         return ResponseEntity.ok(userDao.getUserByUserName("Uchenna"));
 
     }
 
-    @PostMapping("/userProfile")
-    public ResponseEntity<?> updateUserProfile(@Valid @RequestBody UpdateUserProfileRequest updateUserProfileRequest) {
+    @PutMapping("/user-profile")
+    public ResponseEntity<?> updateUserProfile(@RequestBody UpdateUserProfileRequest updateUserProfileRequest) {
         return userService.updateUserProfile(updateUserProfileRequest);
     }
 
-
-
-    /*
-    @GetMapping
-    public ResponseEntity<?> getUser(){
-        return ResponseEntity.ok(new JDBCUserDAO().getUserByUserName("Uchenna"));
-    }
-    */
 }

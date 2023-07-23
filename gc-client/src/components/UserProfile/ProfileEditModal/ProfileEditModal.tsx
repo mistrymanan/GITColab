@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Dropdown } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { updateUserProfile } from '../../../services/UserService';
+import { updateUserProfile, getUserData } from '../../../services/UserService';
+import { store } from '../../../store/store';
+import jwt from 'jwt-decode';
+import { updateProfile } from "../../../redux/userSlice";
 
 /*Start of baseer's code*/
 interface ProfileEditModalProps {
@@ -40,6 +43,9 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
       skills: selectedSkills,
     }));
   };
+  
+  const dispatch = useDispatch();
+  const rdx_store = store;
   /*End of baseer's code*/
 
     
@@ -68,7 +74,17 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
                     github: formData.github, resume: formData.resume}
   
       const response = await updateUserProfile(data);
-      console.log(response);
+
+      if(response != null){
+        dispatch(
+          updateProfile({
+              userData: data
+          })
+      )
+      }
+
+      //decrypt current token, send get request to get newly updated fields, update state of store  -> not neede
+      
     }
 
     
@@ -77,6 +93,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
 
   return (
     <Modal show={true} onHide={handleClose}>
+      
       <Modal.Header closeButton>
         <Modal.Title>Edit Profile</Modal.Title>
       </Modal.Header>
@@ -100,6 +117,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             <Form.Control
               type="text"
               name="organization"
+              placeholder='Enter your Organization'
               value={formData.organization}
               onChange={handleChange}
             />
@@ -109,6 +127,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             <Form.Control
               type="text"
               name="location"
+              placeholder='Enter your Location'
               value={formData.location}
               onChange={handleChange}
             />
@@ -119,6 +138,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
               as="textarea"
               rows={3}
               name="description"
+              placeholder='Enter a Description'
               value={formData.description}
               onChange={handleChange}
             />
@@ -128,6 +148,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             <Form.Control
               type="text"
               name="linkedin"
+              placeholder='Enter your LinkedIn Profile Link'
               value={formData.linkedin}
               onChange={handleChange}
             />
@@ -137,6 +158,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             <Form.Control
               type="text"
               name="github"
+              placeholder='Enter your Github Profile Link'
               value={formData.github}
               onChange={handleChange}
             />

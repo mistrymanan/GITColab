@@ -438,27 +438,65 @@ public class UserServiceTest {
         verify(emailSender, never()).sendEmail(anyString(), anyString(), anyString());
     }
 
-    /*
-    Need to write this test
-     public ResponseEntity<?> updateUserProfile(UpdateUserProfileRequest updateUserProfileRequest) {
+    @Test
+    public void testUpdateProfile_WhenWrong_ShouldReturnErrorMessage() {
+        //Arrange
+        String username = "Uchenna";
+        String organization = "dalhousie";
+        String description = "fakeDesc";
+        String location = "halifax";
+        String resume = "resume";
+        String github = "github";
+        String linkedin = "linkedin";
 
-        if (userRepository.existsByUsername(updateUserProfileRequest.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
-        }
+        UpdateUserProfileRequest updateUserProfileRequest = new UpdateUserProfileRequest(username, organization, location, description , linkedin, github, resume);
 
 
-        Optional<User> user = userRepository.findByUsername(updateUserProfileRequest.getUsername());
+        //Act
+        when(userRepository.existsByUsername(username)).thenReturn(true);
 
-        user.get().setUsername(encoder.encode(updateUserProfileRequest.getUsername()));
-        user.get().setOrganization(encoder.encode(updateUserProfileRequest.getOrganization()));
-        user.get().setLocation(encoder.encode(updateUserProfileRequest.getLocation()));
-        user.get().setDescription(encoder.encode(updateUserProfileRequest.getDescription()));
-        user.get().setLinkedin(encoder.encode(updateUserProfileRequest.getLinkedIn()));
-        user.get().setGithub(encoder.encode(updateUserProfileRequest.getGithub()));
-        user.get().setResume(encoder.encode(updateUserProfileRequest.getResume()));
+        ResponseEntity<?> response = userService.updateUserProfile(updateUserProfileRequest);
 
-        return ResponseEntity.ok(new MessageResponse("User Profile Updated successfully!"));
+        //Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Error: Something went wrong with updating profile", ((MessageResponse) response.getBody()).getMessage());
+
+        //Verify
+        verify(userRepository, times(1)).findByUsername(anyString());
+
     }
-   */
+
+    /*
+    bad test - need fixing
+    @Test
+    public void testUpdateProfile_WhenCorrect_ShouldReturnSuccessMessage() {
+        //Arrange
+        String username = "Uchenna";
+        String organization = "dalhousie";
+        String description = "fakeDesc";
+        String location = "halifax";
+        String resume = "resume";
+        String github = "github";
+        String linkedin = "linkedin";
+
+        UpdateUserProfileRequest updateUserProfileRequest = new UpdateUserProfileRequest(username, organization, location, description , linkedin, github, resume);
+        User user = new User( username,  organization,  location,  description,  linkedin,  github,  resume,  "");
+        //Act
+
+        when(userRepository.existsByUsername(username)).thenReturn(true);
+        userRepository.save(user);
+        ResponseEntity<?> response = userService.updateUserProfile(updateUserProfileRequest);
+
+
+        //Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Success: User Profile Updated successfully!", ((MessageResponse) response.getBody()).getMessage());
+
+        //Verify
+        verify(userRepository, times(1)).findByUsername(anyString());
+
+    }
+
+     */
 
 }

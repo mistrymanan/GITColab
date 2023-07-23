@@ -159,36 +159,25 @@ public class UserService {
 
     public ResponseEntity<?> updateUserProfile(UpdateUserProfileRequest updateUserProfileRequest) {
 
-        /*
-        don't need this check as users will not be able to update their usernames.
-        if (userRepository.existsByUsername(updateUserProfileRequest.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
-        }
-        */
-
         Optional<User> user = userRepository.findByUsername(updateUserProfileRequest.getUsername());
 
-        user.get().setOrganization(updateUserProfileRequest.getOrganization());
-        user.get().setLocation(updateUserProfileRequest.getLocation());
-        user.get().setDescription(updateUserProfileRequest.getDescription());
-        user.get().setLinkedin(updateUserProfileRequest.getLinkedin());
-        user.get().setGithub(updateUserProfileRequest.getGithub());
-        user.get().setResume(updateUserProfileRequest.getResume());
+        if(!user.isPresent()){
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Something went wrong with updating profile"));
+        }else{
+            user.get().setOrganization(updateUserProfileRequest.getOrganization());
+            user.get().setLocation(updateUserProfileRequest.getLocation());
+            user.get().setDescription(updateUserProfileRequest.getDescription());
+            user.get().setLinkedin(updateUserProfileRequest.getLinkedin());
+            user.get().setGithub(updateUserProfileRequest.getGithub());
+            user.get().setResume(updateUserProfileRequest.getResume());
+        }
 
-        userDAO.updateProfile(user);
-        return ResponseEntity.ok(new MessageResponse("User Profile Updated successfully!"));
+
+        userRepository.updateProfile(user.get());
+
+        return ResponseEntity.ok(new MessageResponse("Success: User Profile Updated successfully!"));
     }
 
-    /*
-    public List<UserDTO> getAllUsers() {
-
-        ArrayList<UserDTO> result = new ArrayList();
-
-        Optional<User> user = userRepository.
-
-        return ResponseEntity.ok(new MessageResponse("User Profile Updated successfully!"));
-    }
-    */
 
 }
 

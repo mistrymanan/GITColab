@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { loginUser } from "../../services/UserService";
 import { useDispatch } from "react-redux";
-import { login } from "../../redux/userSlice";
+import { login, updateProfile } from "../../redux/userSlice";
 
 const Login = () => {
     const [invalid, setInvalid] = useState(false);
@@ -38,13 +38,21 @@ const Login = () => {
                         token: token
                     })
                 )
+
                 localStorage.setItem('token', token);
                 //believe that we need to store entire user data to local storage
-
                 //decrypt token then make api calls with that.
+                localStorage.setItem('userProfile', JSON.stringify(response.data));    
+                const currentUser = JSON.parse(localStorage.getItem('userProfile') || '{}');
 
-                localStorage.setItem('userProfile', JSON.stringify(response.data));
-                //const currentUser = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                //super hacky but it works xD
+                //ideally will want to dispatch the updateProfile action and set the value to the response of a get request that returns the hard coded values below.
+                //add these too ? private int followers; private int stars; private int following;
+                dispatch(
+                    updateProfile({
+                        userData: {username : currentUser["username"], organization:'', location: '', description: '', linkedin: '', github: '', resume: ''}
+                    })
+                )
                 
                 navigate('/dashboard');
             } else {

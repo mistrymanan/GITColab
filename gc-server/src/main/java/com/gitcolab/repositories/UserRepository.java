@@ -17,5 +17,5 @@ public interface UserRepository {
     Optional<User> getUserByEmail(String email);
 
     //new method to eliminate confusion
-    public int updateProfile(User user);
+    int updateProfile(User user);
 }

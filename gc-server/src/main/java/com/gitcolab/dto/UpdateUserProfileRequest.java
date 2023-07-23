@@ -11,6 +11,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 
+//This is essentially a UserDTO, Didn't change the base UserDTO class to avoid any potential conflicts with already written code.
 public class UpdateUserProfileRequest {
 
     @NotBlank

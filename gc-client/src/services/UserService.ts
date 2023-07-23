@@ -1,4 +1,5 @@
-import { postData, putData } from "./utils";
+import { get } from "http";
+import { getData, postData, putData } from "./utils";
 
 export async function loginUser(userData: any) {
     if(userData && ( userData.username == null || userData.password == null )) return null;
@@ -41,7 +42,18 @@ export async function updateUserProfile(userData: any){
    
     //api endpoint for updating user data -> error being thrown here
     
-    const response = await postData(userData, "/user/userProfile", localStorage.getItem('token')!);
+    const response = await putData(userData, "/user/user-profile", localStorage.getItem('token')!);
+
+    return response;
+}
+
+export async function getUserData(userData: any){
+
+    if(!userData) return null;
+   
+    //api endpoint for updating user data -> error being thrown here
+    
+    const response = await getData(userData, "/user");
 
     return response;
 }

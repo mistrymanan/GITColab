@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Button, Card, Image } from 'react-bootstrap';
 import { FaLinkedin, FaGithub, FaCloud } from 'react-icons/fa';
 import ProfileEditModal from './ProfileEditModal/ProfileEditModal';
+import { store } from '../../store/store';
+import { selectUserData } from '../../redux/userSlice';
+
 
 interface UserProfileProps {
 displayname: string;
@@ -43,7 +46,12 @@ displayname,
   };
 
   const currentUser = JSON.parse(localStorage.getItem('userProfile') || '{}');
-  
+  const rdx_store = store;
+
+  const userData = selectUserData(rdx_store.getState().userData!)
+
+  console.log("redux user data: ", userData)
+  console.log("lclstorage user data: ", currentUser);
  
   return (
     <Card className="user-profile">
@@ -59,28 +67,30 @@ displayname,
         <Card.Subtitle>
         username
         {currentUser["username"]}
-        </Card.Subtitle>*/}
+        </Card.Subtitle>
+        -> Followers, Following, Stars need to come from github API
+        */}
         <Card.Text>Followers: {followers}</Card.Text>
         <Card.Text>Following: {following}</Card.Text>
         <Card.Text>Stars: {stars}</Card.Text>
-        <Card.Text>Organization: {organization}</Card.Text>
-        <Card.Text>Location: {location}</Card.Text>
-        <Card.Text>Description: {description}</Card.Text>
+        <Card.Text>Organization: {userData["organization"]}</Card.Text>
+        <Card.Text>Location: {userData["location"]}</Card.Text>
+        <Card.Text>Description: {userData["description"]}</Card.Text>
         <Card.Text>
           LinkedIn:{' '}
-          <a href={linkedin} target="_blank" rel="noopener noreferrer">
+          <a href={userData['linkedin']} target="_blank" rel="noopener noreferrer">
             <FaLinkedin />
           </a>
         </Card.Text>
         <Card.Text>
           GitHub:{' '}
-          <a href={github} target="_blank" rel="noopener noreferrer">
+          <a href={userData['github']} target="_blank" rel="noopener noreferrer">
             <FaGithub />
           </a>
         </Card.Text>
         <Card.Text>
                   Resume:{' '}
-                  <a href={resume} target="_blank" rel="noopener noreferrer">
+                  <a href={userData['resume']} target="_blank" rel="noopener noreferrer">
                     <FaCloud />
                   </a>
                 </Card.Text>

@@ -138,19 +138,21 @@ class JDBCUserDAOTest {
         verify(jdbcTemplate).queryForObject(anyString(), any(Object[].class), any(Class.class));
     }
 
-    /*
-    Need to write this test
-    @Override
-    public int updateProfile(Object o) {
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(o);
-        return namedParameterJdbcTemplate
-                .update("UPDATE users SET `username` = :username,`email` = :email,`password` = :password,`firstName` = :firstName," +
-                                "`lastName` = :lastName, `otp` = :otp, `otpExpiry` = :otpExpiry," +
-                                "`organization` = :organization, `location` = :location, `description` = :description, `linkedin` = :linkedin, `github` = :github," +
-                                "`resume` = :resume" +
-                                " WHERE `email` = :email"
-                        ,namedParameters);
+    @Test
+    void testUpdateProfile(){
+        //arrange
+        User user = new User();
+        int expected = 0;
+
+        //act
+        when(namedParameterJdbcTemplate.update(anyString(),any(SqlParameterSource.class))).thenReturn(expected);
+        int result = userDAO.updateProfile(user);
+
+        //assert
+        assertEquals(expected, result);
+
+        //verify
+        verify(namedParameterJdbcTemplate, times(1)).update(anyString(), any(SqlParameterSource.class));
     }
-    */
 
 }
