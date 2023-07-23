@@ -63,8 +63,6 @@ public class JDBCProjectDAOTest {
     @Test
     public void testSave() {
         Project projectToSave = new Project();
-        projectToSave.setName("Test Project");
-        projectToSave.setDescription("This is a test project.");
         projectToSave.setUserId(42);
 
         
@@ -87,8 +85,6 @@ public class JDBCProjectDAOTest {
     public void testUpdate() {
         Project projectToUpdate = new Project();
         projectToUpdate.setId(1);
-        projectToUpdate.setName("Updated Project");
-        projectToUpdate.setDescription("This is an updated project.");
         projectToUpdate.setUserId(42);
 
         

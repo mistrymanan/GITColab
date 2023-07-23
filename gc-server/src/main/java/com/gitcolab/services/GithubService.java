@@ -21,6 +21,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -107,7 +110,7 @@ public class GithubService {
                 return false;
             }
             GHCreateRepositoryBuilder repo = github.createRepository(name);
-            GHRepository created = repo.create();
+            repo.create();
             return true;
         } catch (Exception e) {
             return false;
@@ -122,6 +125,32 @@ public class GithubService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public GitHub getGithubUserByToken(String token) {
+        try {
+            return new GitHubBuilder().withOAuthToken(token).build();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public boolean generateWebHook(String repositoryName, String token) {
+        try {
+            GitHub github = new GitHubBuilder().withOAuthToken(token).build();
+            String repositoryFullName = github.getMyself().getLogin() + '/' + repositoryName;
+            GHRepository repository = github.getRepository(repositoryFullName);
+
+            URL webhookURL = new URL("https://webhook.site/9637d374-dc0a-436a-bf2a-6cac4b1392af");
+            Collection<GHEvent> events = new ArrayList<>();
+            events.add(GHEvent.ISSUES);
+
+            repository.createWebHook(webhookURL, events);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
     private ResponseEntity<MessageResponse> sanitizeGithubRepositoryRequest(GithubRepositoryRequest githubRepositoryRequest) {

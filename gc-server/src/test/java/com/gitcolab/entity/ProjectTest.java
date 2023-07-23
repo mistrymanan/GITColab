@@ -1,5 +1,6 @@
 package com.gitcolab.entity;
 
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -9,66 +10,84 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ProjectTest {
+    private Project project;
 
-    @Test
-    public void testAllArgsConstructor() {
-        int id = 1;
-        String name = "Test Project";
-        String description = "This is a test project.";
-        int userId = 42;
+    @Before
+    public void setUp() {
+        // You can create a sample Project object for testing
+        int userId = 1;
+        String repositoryName = "sample-repo";
+        String repositoryOwner = "sample-owner";
+        String atlassianProjectId = "project-123";
+        String jiraBoardName = "board-456";
         Instant timestamp = Instant.now();
-        String gitHubRepoName = "test-repo";
-        int atlassianProjectId = 100;
 
-        Project project = new Project(id, name, description, userId, timestamp, gitHubRepoName, atlassianProjectId);
-
-        assertEquals(id, project.getId());
-        assertEquals(name, project.getName());
-        assertEquals(description, project.getDescription());
-        assertEquals(userId, project.getUserId());
-        assertEquals(timestamp, project.getTimestamp());
-        assertEquals(gitHubRepoName, project.getGitHubRepoName());
-        assertEquals(atlassianProjectId, project.getAtlassianProjectId());
+        project = new Project(userId, repositoryName, repositoryOwner, atlassianProjectId, jiraBoardName, timestamp);
     }
+
     @Test
-    public void testNoArgsConstructor() {
+    public void testParameterizedConstructor() {
+        // Test the parameterized constructor
+        int userId = 1;
+        String repositoryName = "sample-repo";
+        String repositoryOwner = "sample-owner";
+        String atlassianProjectId = "project-123";
+        String jiraBoardName = "board-456";
+        Instant timestamp = Instant.now();
+
+        Project project = new Project(userId, repositoryName, repositoryOwner, atlassianProjectId, jiraBoardName, timestamp);
+
+        assertEquals(userId, project.getUserId());
+        assertEquals(repositoryName, project.getRepositoryName());
+        assertEquals(repositoryOwner, project.getRepositoryOwner());
+        assertEquals(atlassianProjectId, project.getAtlassianProjectId());
+        assertEquals(jiraBoardName, project.getJiraBoardName());
+        assertEquals(timestamp, project.getTimestamp());
+    }
+
+    @Test
+    public void testDefaultConstructor() {
+        // Test the default constructor
         Project project = new Project();
 
+        // Verify that all fields are initialized with default values
         assertEquals(0, project.getId());
-        assertNull(project.getName());
-        assertNull(project.getDescription());
         assertEquals(0, project.getUserId());
-        assertNull(project.getTimestamp());
-        assertNull(project.getGitHubRepoName());
-        assertEquals(0, project.getAtlassianProjectId());
+        assertEquals(null, project.getRepositoryName());
+        assertEquals(null, project.getRepositoryOwner());
+        assertEquals(null, project.getAtlassianProjectId());
+        assertEquals(null, project.getJiraBoardName());
+        assertEquals(null, project.getTimestamp());
     }
 
     @Test
     public void testGettersAndSetters() {
+        // Test the getters and setters
+        int id = 100;
+        int userId = 2;
+        String repositoryName = "new-repo";
+        String repositoryOwner = "new-owner";
+        String atlassianProjectId = "project-789";
+        String jiraBoardName = "board-012";
+        Instant timestamp = Instant.now().plusSeconds(3600);
+
         Project project = new Project();
-
-        int id = 1;
-        String name = "Test Project";
-        String description = "This is a test project.";
-        int userId = 42;
-        Instant timestamp = Instant.now();
-        String gitHubRepoName = "test-repo";
-        int atlassianProjectId = 100;
-
+        // Set new values using setters
         project.setId(id);
-        project.setName(name);
-        project.setDescription(description);
         project.setUserId(userId);
-        project.setTimestamp(timestamp);
-        project.setGitHubRepoName(gitHubRepoName);
+        project.setRepositoryName(repositoryName);
+        project.setRepositoryOwner(repositoryOwner);
         project.setAtlassianProjectId(atlassianProjectId);
+        project.setJiraBoardName(jiraBoardName);
+        project.setTimestamp(timestamp);
 
+        // Verify that getters return the updated values
         assertEquals(id, project.getId());
-        assertEquals(name, project.getName());
-        assertEquals(description, project.getDescription());
         assertEquals(userId, project.getUserId());
-        assertEquals(timestamp, project.getTimestamp());
-        assertEquals(gitHubRepoName, project.getGitHubRepoName());
+        assertEquals(repositoryName, project.getRepositoryName());
+        assertEquals(repositoryOwner, project.getRepositoryOwner());
         assertEquals(atlassianProjectId, project.getAtlassianProjectId());
+        assertEquals(jiraBoardName, project.getJiraBoardName());
+        assertEquals(timestamp, project.getTimestamp());
     }
 }
