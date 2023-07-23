@@ -5,7 +5,6 @@ import AdddProjectModal from "./AddProjectModal";
 import { useNavigate } from "react-router";
 import {
     ATLASSIAN_CLIENT_ID,
-    ATLASSIAN_CLIENT_SECRET,
     ATLASSIAN_URL,
     GITHUB_CLIENT_ID,
     GITHUB_SCOPE
@@ -25,7 +24,6 @@ const Integration = () => {
     const userDataStore = useSelector(selectUser);
     const atlassianURL = ATLASSIAN_URL;
     const atlassianClientId= ATLASSIAN_CLIENT_ID;
-    const atlassianClientSecret= ATLASSIAN_CLIENT_SECRET;
 
     const handleGithubLogin = () => {
         window.location.assign(`https://github.com/login/oauth/authorize?client_id=${clientId}&scope=${scope}`);
@@ -69,7 +67,6 @@ const Integration = () => {
                 const data = {
                     "grant_type":"authorization_code",
                     "client_id":atlassianClientId,
-                    "client_secret":atlassianClientSecret,
                     "redirect_uri":"http://localhost:3000/integration",
                     "code": authenticationCode
                 };
