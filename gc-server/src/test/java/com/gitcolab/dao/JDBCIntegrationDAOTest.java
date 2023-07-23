@@ -115,8 +115,9 @@ class JDBCIntegrationDAOTest {
         when(jdbcTemplate.queryForObject(anyString(), Mockito.any(Object[].class), Mockito.any(IntegrationRowMapper.class)))
                 .thenThrow(EmptyResultDataAccessException.class);
 
-        Optional<Integration> result = jdbcIntegrationDAO.get(id);
+        assertThrows(EmptyResultDataAccessException.class,()->{
+            jdbcIntegrationDAO.get(id);
+        });
 
-        assertFalse(result.isPresent());
     }
 }
