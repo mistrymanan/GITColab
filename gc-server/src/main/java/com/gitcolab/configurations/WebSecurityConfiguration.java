@@ -58,18 +58,17 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) {
-        try {
-            http.csrf(csrf -> csrf.disable())
-                    .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-                    .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .authorizeHttpRequests(auth ->
-                            auth.requestMatchers("/api/auth/**").permitAll()
-                                    .requestMatchers("/api/auth/refreshtoken").permitAll()
-                                    .requestMatchers("/api/test/**").permitAll()
-                                    .anyRequest().authenticated()
-                    );
-            http.authenticationProvider(authenticationProvider());
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth ->
+                        auth.requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/api/auth/refreshtoken").permitAll()
+                                .requestMatchers("/api/test/**").permitAll()
+                                .requestMatchers("/api/github/**").permitAll()
+                                .anyRequest().authenticated()
+                );
 
             http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
             return http.build();
