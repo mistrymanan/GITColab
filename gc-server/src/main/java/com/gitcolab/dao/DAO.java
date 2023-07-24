@@ -1,7 +1,5 @@
 package com.gitcolab.dao;
 
-import com.gitcolab.entity.Integration;
-
 import java.util.Optional;
 
 public interface DAO<T> {

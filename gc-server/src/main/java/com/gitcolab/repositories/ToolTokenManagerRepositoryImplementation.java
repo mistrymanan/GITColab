@@ -1,36 +1,36 @@
 package com.gitcolab.repositories;
 
-import com.gitcolab.dao.IntegrationDAO;
+import com.gitcolab.dao.ToolTokenManagerDAO;
 import com.gitcolab.entity.EnumIntegrationType;
-import com.gitcolab.entity.Integration;
+import com.gitcolab.entity.ToolTokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class IntegrationRepositoryImplementation implements IntegrationRepository {
+public class ToolTokenManagerRepositoryImplementation implements ToolTokenManagerRepository {
 
     @Autowired
-    IntegrationDAO integrationDAO;
+    ToolTokenManagerDAO integrationDAO;
 
     @Override
-    public int save(Integration integration) {
+    public int save(ToolTokenManager integration) {
         return integrationDAO.save(integration);
     }
 
     @Override
-    public int update(Integration integration) {
+    public int update(ToolTokenManager integration) {
         return integrationDAO.update(integration);
     }
 
     @Override
-    public Optional<Integration> getByEmail(String email, EnumIntegrationType type) {
+    public Optional<ToolTokenManager> getByEmail(String email, EnumIntegrationType type) {
         return integrationDAO.getByEmail(email,type);
     }
 
     @Override
-    public Optional<Integration> getByUsername(String username) {
+    public Optional<ToolTokenManager> getByUsername(String username) {
         return integrationDAO.getByUsername(username);
     }
 }

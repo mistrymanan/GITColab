@@ -10,27 +10,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Integration {
+public class ToolTokenManager {
     private long id;
     private EnumIntegrationType type;
-    private String repositoryId;
     private String token;
     private long userId;
 
     private String typeString;
 
-    public Integration(EnumIntegrationType type, String token, long userId) {
+    public ToolTokenManager(EnumIntegrationType type, String token, long userId) {
         this.type = type;
         this.token = token;
         this.userId = userId;
 
         this.typeString = type.toString();
-    }
-
-    public Integration(EnumIntegrationType type, String repositoryId, String token, long userId) {
-        this.type = type;
-        this.repositoryId = repositoryId;
-        this.token = token;
-        this.userId = userId;
     }
 }

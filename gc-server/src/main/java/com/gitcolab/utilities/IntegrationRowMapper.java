@@ -1,20 +1,18 @@
 package com.gitcolab.utilities;
 
 import com.gitcolab.entity.EnumIntegrationType;
-import com.gitcolab.entity.Integration;
-import com.gitcolab.entity.User;
+import com.gitcolab.entity.ToolTokenManager;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class IntegrationRowMapper implements RowMapper<Integration> {
+public class IntegrationRowMapper implements RowMapper<ToolTokenManager> {
     @Override
-    public Integration mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Integration integration = Integration.builder()
+    public ToolTokenManager mapRow(ResultSet rs, int rowNum) throws SQLException {
+        ToolTokenManager integration = ToolTokenManager.builder()
                 .id(rs.getInt("id"))
                 .type(EnumIntegrationType.valueOf(rs.getString("type")))
-                .repositoryId(rs.getString("repositoryId"))
                 .token(rs.getString("token"))
                 .userId(rs.getInt("userId"))
                 .build();

@@ -63,8 +63,6 @@ public class JDBCProjectDAOTest {
     @Test
     public void testSave() {
         Project projectToSave = new Project();
-        projectToSave.setName("Test Project");
-        projectToSave.setDescription("This is a test project.");
         projectToSave.setUserId(42);
 
         
@@ -78,7 +76,8 @@ public class JDBCProjectDAOTest {
 
         
         verify(namedParameterJdbcTemplateMock).update(
-                eq("INSERT INTO Project(`name`,`description`,`userId`,`timestamp`,`gitHubRepoName`,`atlassianProjectId`) values(:name,:description,:userId,:timestamp,:gitHubRepoName,:atlassianProjectId)"),
+                eq("INSERT INTO Project(`userId`,`repositoryName`,`repositoryOwner`,`atlassianProjectId`,`jiraBoardName`,`timestamp`) " +
+                        "values(:userId,:repositoryName,:repositoryOwner,:atlassianProjectId,:jiraBoardName,:timestamp)"),
                 any(BeanPropertySqlParameterSource.class)
         );
     }
@@ -87,8 +86,6 @@ public class JDBCProjectDAOTest {
     public void testUpdate() {
         Project projectToUpdate = new Project();
         projectToUpdate.setId(1);
-        projectToUpdate.setName("Updated Project");
-        projectToUpdate.setDescription("This is an updated project.");
         projectToUpdate.setUserId(42);
 
         
@@ -102,8 +99,7 @@ public class JDBCProjectDAOTest {
 
         
         verify(namedParameterJdbcTemplateMock).update(
-                eq("UPDATE Project SET `id` = :id,`name` = :name,`description` = :description," +
-                        "`userId` = :userId,`timestamp` = :timestamp, `gitHubRepoName` = :gitHubRepoName, `atlassianProjectId` = :atlassianProjectId WHERE `id` = :id"),
+                eq("UPDATE Project SET `userId`=:userId,`repositoryName`=:repositoryName,`repositoryOwner`=:repositoryOwner,`atlassianProjectId`=:atlassianProjectId, `jiraBoardName`=:jiraBoardName, `timestamp`=:timestamp WHERE `id` = :id"),
                 any(BeanPropertySqlParameterSource.class)
         );
     }

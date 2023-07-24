@@ -5,8 +5,8 @@ import com.gitcolab.dro.atlassian.GetAccessTokenRequest;
 import com.gitcolab.dro.atlassian.GetAccessTokenResponse;
 import com.gitcolab.dto.MessageResponse;
 import com.gitcolab.entity.EnumIntegrationType;
-import com.gitcolab.entity.Integration;
-import com.gitcolab.repositories.IntegrationRepository;
+import com.gitcolab.entity.ToolTokenManager;
+import com.gitcolab.repositories.ToolTokenManagerRepository;
 import com.gitcolab.repositories.UserRepository;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 class AtlassianServiceTest {
     
     @Mock
-    private IntegrationRepository integrationRepository;
+    private ToolTokenManagerRepository integrationRepository;
 
     @Mock
     private UserRepository userRepository;
@@ -65,8 +65,8 @@ class AtlassianServiceTest {
         ResponseEntity<?> result = atlassianService.getAccessToken(request, userDetails);
 
         
-        verify(integrationRepository, times(1)).save(any(Integration.class));
-        verify(integrationRepository, times(0)).update(any(Integration.class));
+        verify(integrationRepository, times(1)).save(any(ToolTokenManager.class));
+        verify(integrationRepository, times(0)).update(any(ToolTokenManager.class));
 
         
         assertEquals(responseEntity, result);
@@ -84,8 +84,8 @@ class AtlassianServiceTest {
         ResponseEntity<?> result = atlassianService.getAccessToken(request, userDetails);
 
         
-        verify(integrationRepository, times(0)).save(any(Integration.class));
-        verify(integrationRepository, times(0)).update(any(Integration.class));
+        verify(integrationRepository, times(0)).save(any(ToolTokenManager.class));
+        verify(integrationRepository, times(0)).update(any(ToolTokenManager.class));
 
         
         assertEquals(ResponseEntity.badRequest().body(new MessageResponse("Atlassian auth code is invalid.")), result);
@@ -108,15 +108,15 @@ class AtlassianServiceTest {
         when(atlassianServiceClient.getAccessToken(request)).thenReturn(responseEntity);
 
         
-        Integration existingIntegration = new Integration(EnumIntegrationType.ATLASSIAN, "existing_token", userDetails.getId());
+        ToolTokenManager existingIntegration = new ToolTokenManager(EnumIntegrationType.ATLASSIAN, "existing_token", userDetails.getId());
         when(integrationRepository.getByEmail(userDetails.getEmail(), EnumIntegrationType.ATLASSIAN)).thenReturn(Optional.of(existingIntegration));
 
         
         ResponseEntity<?> result = atlassianService.getAccessToken(request, userDetails);
 
         
-        verify(integrationRepository, times(0)).save(any(Integration.class));
-        verify(integrationRepository, times(1)).update(any(Integration.class));
+        verify(integrationRepository, times(0)).save(any(ToolTokenManager.class));
+        verify(integrationRepository, times(1)).update(any(ToolTokenManager.class));
 
         
         assertEquals(responseEntity, result);

@@ -5,8 +5,8 @@ import com.gitcolab.dro.atlassian.GetAccessTokenRequest;
 import com.gitcolab.dro.atlassian.GetAccessTokenResponse;
 import com.gitcolab.dto.MessageResponse;
 import com.gitcolab.entity.EnumIntegrationType;
-import com.gitcolab.entity.Integration;
-import com.gitcolab.repositories.IntegrationRepository;
+import com.gitcolab.entity.ToolTokenManager;
+import com.gitcolab.repositories.ToolTokenManagerRepository;
 import com.gitcolab.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +20,13 @@ public class AtlassianService {
 
     @Value("${gitcolab.app.atlassian.clientSecret}")
     private String ATLASSIAN_CLIENT_SECRET;
-    IntegrationRepository integrationRepository;
+    ToolTokenManagerRepository integrationRepository;
     UserRepository userRepository;
 
     private ClientConfig clientConfig;
 
 
-    public AtlassianService(IntegrationRepository integrationRepository, UserRepository userRepository,ClientConfig clientConfig) {
+    public AtlassianService(ToolTokenManagerRepository integrationRepository, UserRepository userRepository, ClientConfig clientConfig) {
         this.integrationRepository = integrationRepository;
         this.userRepository = userRepository;
         this.clientConfig=clientConfig;
@@ -43,12 +43,12 @@ public class AtlassianService {
 
         ResponseEntity<GetAccessTokenResponse> response=atlassianServiceClient.getAccessToken(getAccessTokenRequest);
 
-        Optional<Integration> integration = integrationRepository.getByEmail(userDetails.getEmail(),EnumIntegrationType.ATLASSIAN);
+        Optional<ToolTokenManager> integration = integrationRepository.getByEmail(userDetails.getEmail(),EnumIntegrationType.ATLASSIAN);
 
         if(!integration.isPresent()) {
-            integrationRepository.save(new Integration(EnumIntegrationType.ATLASSIAN, response.getBody().getAccess_token(), userDetails.getId()));
+            integrationRepository.save(new ToolTokenManager(EnumIntegrationType.ATLASSIAN, response.getBody().getAccess_token(), userDetails.getId()));
         } else {
-           integrationRepository.update(new Integration(EnumIntegrationType.ATLASSIAN, response.getBody().getAccess_token(), userDetails.getId()));
+           integrationRepository.update(new ToolTokenManager(EnumIntegrationType.ATLASSIAN, response.getBody().getAccess_token(), userDetails.getId()));
         }
         return response;
     }

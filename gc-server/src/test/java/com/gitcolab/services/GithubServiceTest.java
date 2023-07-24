@@ -1,7 +1,7 @@
 package com.gitcolab.services;
 import com.gitcolab.dto.GithubAuthRequest;
 import com.gitcolab.dto.MessageResponse;
-import com.gitcolab.repositories.IntegrationRepository;
+import com.gitcolab.repositories.ToolTokenManagerRepository;
 import com.gitcolab.repositories.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +21,7 @@ public class GithubServiceTest {
     UserRepository userRepository;
 
     @Mock
-    IntegrationRepository integrationRepository;
+    ToolTokenManagerRepository integrationRepository;
 
     @Mock
     private WebClient.Builder webClientBuilder;

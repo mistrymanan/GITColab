@@ -4,17 +4,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-
-public class IntegrationTest {
-    private Integration integration;
+public class ToolTokenManagerTest {
+    private ToolTokenManager integration;
 
     @BeforeEach
     public void setUp() {
-        integration = Integration.builder()
+        integration = ToolTokenManager.builder()
                 .id(1L)
                 .type(EnumIntegrationType.GITHUB)
-                .repositoryId("repoId")
                 .token("token")
                 .userId(3)
                 .build();
@@ -22,10 +19,9 @@ public class IntegrationTest {
 
     @Test
     public void testIntegrationConstructorWithAllArgs() {
-        Integration integration1 = new Integration(EnumIntegrationType.GITHUB, "repoId", "token", 1);
+        ToolTokenManager integration1 = new ToolTokenManager(EnumIntegrationType.GITHUB, "token", 1);
 
         Assertions.assertEquals(EnumIntegrationType.GITHUB, integration1.getType());
-        Assertions.assertEquals("repoId", integration1.getRepositoryId());
         Assertions.assertEquals("token", integration1.getToken());
         Assertions.assertEquals(1, integration1.getUserId());
     }
@@ -36,7 +32,7 @@ public class IntegrationTest {
         String token = "abc123";
         long userId = 12345;
 
-        Integration integration = new Integration(type, token, userId);
+        ToolTokenManager integration = new ToolTokenManager(type, token, userId);
 
         Assertions.assertEquals(integration.getType(), type);
         Assertions.assertEquals(integration.getToken(), token);
@@ -50,11 +46,10 @@ public class IntegrationTest {
         String token = "xyz789";
         long userId = 67890;
 
-        Integration integration = new Integration(type, repositoryId, token, userId);
+        ToolTokenManager integration = new ToolTokenManager(type, token, userId);
 
         Assertions.assertEquals(integration.getType(), type);
         Assertions.assertEquals(integration.getToken(), token);
-        Assertions.assertEquals(integration.getRepositoryId(), repositoryId);
         Assertions.assertEquals(integration.getUserId(), userId);
     }
 
@@ -65,16 +60,14 @@ public class IntegrationTest {
         String token = "xyz789";
         long userId = 67890;
 
-        Integration integration = Integration.builder()
+        ToolTokenManager integration = ToolTokenManager.builder()
                 .type(type)
-                .repositoryId(repositoryId)
                 .token(token)
                 .userId(userId)
                 .build();
 
         Assertions.assertEquals(integration.getType(), type);
         Assertions.assertEquals(integration.getToken(), token);
-        Assertions.assertEquals(integration.getRepositoryId(), repositoryId);
         Assertions.assertEquals(integration.getUserId(), userId);
     }
 }

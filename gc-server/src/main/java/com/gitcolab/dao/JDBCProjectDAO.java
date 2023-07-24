@@ -28,8 +28,8 @@ public class JDBCProjectDAO implements ProjectDAO {
     public int save(Object o) {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(o);
         return namedParameterJdbcTemplate
-                .update("INSERT INTO Project(`name`,`description`,`userId`,`timestamp`,`gitHubRepoName`,`atlassianProjectId`) " +
-                                "values(:name,:description,:userId,:timestamp,:gitHubRepoName,:atlassianProjectId)"
+                .update("INSERT INTO Project(`userId`,`repositoryName`,`repositoryOwner`,`atlassianProjectId`,`jiraBoardName`,`timestamp`) " +
+                                "values(:userId,:repositoryName,:repositoryOwner,:atlassianProjectId,:jiraBoardName,:timestamp)"
                         ,namedParameters);
     }
 
@@ -37,7 +37,7 @@ public class JDBCProjectDAO implements ProjectDAO {
     public int update(Object o) {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(o);
         return namedParameterJdbcTemplate
-                .update("UPDATE Project SET `id` = :id,`name` = :name,`description` = :description,`userId` = :userId,`timestamp` = :timestamp, `gitHubRepoName` = :gitHubRepoName, `atlassianProjectId` = :atlassianProjectId WHERE `id` = :id"
+                .update("UPDATE Project SET `userId`=:userId,`repositoryName`=:repositoryName,`repositoryOwner`=:repositoryOwner,`atlassianProjectId`=:atlassianProjectId, `jiraBoardName`=:jiraBoardName, `timestamp`=:timestamp WHERE `id` = :id"
                         ,namedParameters);
     }
 

@@ -11,11 +11,19 @@ import java.time.Instant;
 @NoArgsConstructor
 public class Project {
     private int id;
-    private String name;
-    private String description;
     private int userId;
+    private String repositoryName;
+    private String repositoryOwner;
+    private String atlassianProjectId;
+    private String jiraBoardName;
     private Instant timestamp;
-    private String gitHubRepoName;
-    private int atlassianProjectId;
 
+    public Project(int userId, String repositoryName, String repositoryOwner, String atlassianProjectId, String jiraBoardName, Instant timestamp) {
+        this.userId = userId;
+        this.repositoryName = repositoryName;
+        this.repositoryOwner = repositoryOwner;
+        this.atlassianProjectId = atlassianProjectId;
+        this.jiraBoardName = jiraBoardName;
+        this.timestamp = timestamp;
+    }
 }

@@ -1,7 +1,7 @@
 package com.gitcolab.dao;
 
 import com.gitcolab.entity.EnumIntegrationType;
-import com.gitcolab.entity.Integration;
+import com.gitcolab.entity.ToolTokenManager;
 import com.gitcolab.utilities.IntegrationRowMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,10 +21,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class JDBCIntegrationDAOTest {
+class JDBCToolTokenManagerDAOTest {
 
     @InjectMocks
-    private JDBCIntegrationDAO jdbcIntegrationDAO;
+    private JDBCToolTokenManagerDAO jdbcIntegrationDAO;
 
     @Mock
     private JdbcTemplate jdbcTemplate;
@@ -34,9 +34,8 @@ class JDBCIntegrationDAOTest {
 
     @Test
     public void saveTest(){
-        Integration integration = new Integration();
+        ToolTokenManager integration = new ToolTokenManager();
         integration.setType(EnumIntegrationType.GITHUB);
-        integration.setRepositoryId("repo-id");
         integration.setToken("some-token");
         integration.setUserId(456L);
 
@@ -52,13 +51,13 @@ class JDBCIntegrationDAOTest {
     public void testGetByEmail() {
         String email = "test@example.com";
         EnumIntegrationType integrationType = EnumIntegrationType.GITHUB;
-        Integration integration = new Integration();
+        ToolTokenManager integration = new ToolTokenManager();
         integration.setType(integrationType);
 
         when(jdbcTemplate.queryForObject(anyString(), Mockito.any(Object[].class), Mockito.any(IntegrationRowMapper.class)))
                 .thenReturn(integration);
 
-        Optional<Integration> result = jdbcIntegrationDAO.getByEmail(email, integrationType);
+        Optional<ToolTokenManager> result = jdbcIntegrationDAO.getByEmail(email, integrationType);
 
         assertTrue(result.isPresent());
         assertEquals(integrationType, result.get().getType());
@@ -72,16 +71,15 @@ class JDBCIntegrationDAOTest {
         when(jdbcTemplate.queryForObject(anyString(), Mockito.any(Object[].class), Mockito.any(IntegrationRowMapper.class)))
                 .thenThrow(EmptyResultDataAccessException.class);
 
-        Optional<Integration> result = jdbcIntegrationDAO.getByEmail(email, integrationType);
+        Optional<ToolTokenManager> result = jdbcIntegrationDAO.getByEmail(email, integrationType);
 
         assertFalse(result.isPresent());
     }
 
     @Test
     public void testUpdate() {
-        Integration integration = new Integration();
+        ToolTokenManager integration = new ToolTokenManager();
         integration.setType(EnumIntegrationType.GITHUB);
-        integration.setRepositoryId("githubId");
         integration.setToken("updated-token");
         integration.setUserId(456L);
 
@@ -97,13 +95,13 @@ class JDBCIntegrationDAOTest {
     @Test
     public void testGet() {
         long id = 1L;
-        Integration integration = new Integration();
+        ToolTokenManager integration = new ToolTokenManager();
         integration.setId(id);
 
         when(jdbcTemplate.queryForObject(anyString(), Mockito.any(Object[].class), Mockito.any(IntegrationRowMapper.class)))
                 .thenReturn(integration);
 
-        Optional<Integration> result = jdbcIntegrationDAO.get(id);
+        Optional<ToolTokenManager> result = jdbcIntegrationDAO.get(id);
 
         assertTrue(result.isPresent());
         assertEquals(id, result.get().getId());

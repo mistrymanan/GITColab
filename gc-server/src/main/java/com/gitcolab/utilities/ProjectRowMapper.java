@@ -12,12 +12,12 @@ public class ProjectRowMapper implements RowMapper<Project> {
     public Project mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         Project project = new Project();
         project.setId(resultSet.getInt("id"));
-        project.setName(resultSet.getString("name"));
-        project.setDescription(resultSet.getString("description"));
         project.setUserId(resultSet.getInt("userId"));
+        project.setRepositoryName(resultSet.getString("repositoryName"));
+        project.setRepositoryOwner(resultSet.getString("repositoryOwner"));
+        project.setAtlassianProjectId(resultSet.getString("atlassianProjectId"));
+        project.setJiraBoardName(resultSet.getString("jiraBoardName"));
         project.setTimestamp(resultSet.getTimestamp("timestamp").toInstant());
-        project.setGitHubRepoName(resultSet.getString("gitHubRepoName"));
-        project.setAtlassianProjectId(resultSet.getInt("atlassianProjectId"));
         return project;
     }
 }

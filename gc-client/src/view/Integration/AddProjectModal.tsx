@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../redux/userSlice';
+import { createProject } from '../../services/ProjectService';
 
 interface AddProjectModalProps {
     projectDetails: ProjectDetails;
@@ -20,13 +23,15 @@ const AdddProjectModal: React.FC<AddProjectModalProps> = ({
     const [isAtlassian, setIsAtlassian] = useState(false);
     const [jiraBoard, setJiraBoard] = useState("");
     const [invalid, setInvalid] = useState(false);
+    const userDataStore = useSelector(selectUser);
+    const [errorMsg, setErrorMsg] = useState('');
 
     const handRepositoryNameChange = (e: any) => {
         setRepositoryName(e.target.value);
     }
 
-    const handleIsAtlassianChange = () => {
-        setIsAtlassian(!isAtlassian);
+    const handleIsAtlassianChange = () => {        
+        setIsAtlassian(!isAtlassian);        
     }
 
     const handleJiraBoardChange = (e: any) => {
@@ -34,12 +39,31 @@ const AdddProjectModal: React.FC<AddProjectModalProps> = ({
     }
 
     const handleSubmit = async (event: any) => {
-        const form = event.currentTarget;
+        const form = event.currentTarget;        
         event.preventDefault();
         if (form.checkValidity() === true) {
-            const data = { repositoryName: repositoryName, isAtlassian: isAtlassian, jiraBoard: jiraBoard };
-            if (data) {
-                handleClose();
+            const projectData = {
+                email: userDataStore.email,
+                githubToken: userDataStore.githubToken,
+                repositoryName: repositoryName,
+                atlassianToken: userDataStore.atlassianToken,
+                isAtlassianRequired: isAtlassian,
+                jiraBoardName: jiraBoard
+            }
+            if (projectData) {
+                const response = await createProject(projectData, userDataStore.token);
+                if(response?.data) {
+                    if(response?.status === 200) {
+                        // TODO: call toaster message
+                        handleClose();
+                    } else {
+                        setErrorMsg("Something went wrong!");
+                    }                    
+                } else {
+                    console.log("ERROR===>", JSON.stringify(response));
+                    let message: string = response?.response?.data.message;
+                    setErrorMsg(message);
+                }            
             }
         } else {
             event.stopPropagation();
@@ -92,6 +116,11 @@ const AdddProjectModal: React.FC<AddProjectModalProps> = ({
                             <label htmlFor="floatingInputCustom">JIRA Board Name</label>
                         </Form.Floating>
                     )}
+                    {errorMsg !== "" &&
+                        <Form.Group className="mt-1" controlId="errorMsg">
+                            <Form.Label color="red">{errorMsg}</Form.Label>
+                        </Form.Group>
+                    }
                     <Button variant="primary" type="submit">
                         Add Project
                     </Button>
