@@ -26,14 +26,14 @@ class ProjectRowMapperTest {
         String gitHubRepoName = "test-repo";
         String repositoryOwner = "test-repo-owner";
         String jiraBoardName = "jira";
-        int atlassianProjectId = 100;
+        String atlassianProjectId = "100";
 
         Mockito.when(resultSetMock.getInt("id")).thenReturn(id);
         Mockito.when(resultSetMock.getInt("userId")).thenReturn(userId);
         Mockito.when(resultSetMock.getTimestamp("timestamp")).thenReturn(Timestamp.from(timestamp));
         Mockito.when(resultSetMock.getString("repositoryName")).thenReturn(gitHubRepoName);
         Mockito.when(resultSetMock.getString("repositoryOwner")).thenReturn(repositoryOwner);
-        Mockito.when(resultSetMock.getInt("atlassianProjectId")).thenReturn(atlassianProjectId);
+        Mockito.when(resultSetMock.getString("atlassianProjectId")).thenReturn(atlassianProjectId);
         Mockito.when(resultSetMock.getString("jiraBoardName")).thenReturn(jiraBoardName);
 
         ProjectRowMapper projectRowMapper = new ProjectRowMapper();

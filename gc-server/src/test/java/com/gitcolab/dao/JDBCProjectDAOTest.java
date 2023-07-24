@@ -76,7 +76,8 @@ public class JDBCProjectDAOTest {
 
         
         verify(namedParameterJdbcTemplateMock).update(
-                eq("INSERT INTO Project(`name`,`description`,`userId`,`timestamp`,`gitHubRepoName`,`atlassianProjectId`) values(:name,:description,:userId,:timestamp,:gitHubRepoName,:atlassianProjectId)"),
+                eq("INSERT INTO Project(`userId`,`repositoryName`,`repositoryOwner`,`atlassianProjectId`,`jiraBoardName`,`timestamp`) " +
+                        "values(:userId,:repositoryName,:repositoryOwner,:atlassianProjectId,:jiraBoardName,:timestamp)"),
                 any(BeanPropertySqlParameterSource.class)
         );
     }
@@ -98,8 +99,7 @@ public class JDBCProjectDAOTest {
 
         
         verify(namedParameterJdbcTemplateMock).update(
-                eq("UPDATE Project SET `id` = :id,`name` = :name,`description` = :description," +
-                        "`userId` = :userId,`timestamp` = :timestamp, `gitHubRepoName` = :gitHubRepoName, `atlassianProjectId` = :atlassianProjectId WHERE `id` = :id"),
+                eq("UPDATE Project SET `userId`=:userId,`repositoryName`=:repositoryName,`repositoryOwner`=:repositoryOwner,`atlassianProjectId`=:atlassianProjectId, `jiraBoardName`=:jiraBoardName, `timestamp`=:timestamp WHERE `id` = :id"),
                 any(BeanPropertySqlParameterSource.class)
         );
     }
