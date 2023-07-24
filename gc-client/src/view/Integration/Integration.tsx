@@ -38,7 +38,7 @@ const Integration = () => {
         console.log("URL->"+url);
         const authenticationCode = url.search.replace("?code=", "");
         console.log("githubcode->"+authenticationCode);
-        if (authenticationCode!="" && authenticationCode.length<=100 && githubAuthenticated === "") {
+        if (authenticationCode !== "" && authenticationCode.length<=100 && githubAuthenticated === "") {
             console.log("TOKEN==G==", githubAuthenticated);
             const fetchData = async () => {
                 const data = {
@@ -86,7 +86,7 @@ const Integration = () => {
             fetchData();
             navigate('/integration');
         }
-    }, [dispatch, githubAuthenticated, navigate, userDataStore, userDataStore.email, userDataStore.token]);
+    }, [atlassianAuthenticated, atlassianClientId, dispatch, githubAuthenticated, navigate, userDataStore, userDataStore.email, userDataStore.token]);
 
     const handleModalClose = () => {
         setOpenAddProjectModal(false);
