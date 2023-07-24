@@ -96,7 +96,7 @@ public class GithubService {
             }
             GHCreateRepositoryBuilder repo = github.createRepository(githubRepositoryRequest.getRepositoryName());
             GHRepository created = repo.create();
-            return ResponseEntity.badRequest().body(new MessageResponse("Github repository created."));
+            return ResponseEntity.ok().body(new MessageResponse("Github repository created."));
         } catch (Exception e) {
             logger.error("Github facing issue."+e.getMessage());
             return ResponseEntity.badRequest().body(new MessageResponse("Github facing issue."));
@@ -120,7 +120,8 @@ public class GithubService {
     public GHRepository getRepositoryByName(String name, String token) {
         try {
             GitHub github = new GitHubBuilder().withOAuthToken(token).build();
-            GHRepository repository = github.getRepository(name);
+            String repositoryFullName = github.getMyself().getLogin() + '/' + name;
+            GHRepository repository = github.getRepository(repositoryFullName);
             return repository;
         } catch (Exception e) {
             return null;

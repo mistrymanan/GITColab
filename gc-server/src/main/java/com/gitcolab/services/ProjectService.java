@@ -7,11 +7,9 @@ import com.gitcolab.entity.Project;
 import com.gitcolab.repositories.ProjectRepository;
 import com.gitcolab.repositories.ToolTokenManagerRepository;
 import org.kohsuke.github.GitHub;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
-
-import java.sql.Date;
 import java.time.Instant;
 
 @Service
@@ -20,6 +18,13 @@ public class ProjectService {
     ProjectRepository projectRepository;
 
     GithubService githubService;
+
+    @Autowired
+    public ProjectService(ToolTokenManagerRepository integrationRepository, GithubService githubService, ProjectRepository projectRepository) {
+        this.integrationRepository = integrationRepository;
+        this.githubService = githubService;
+        this.projectRepository = projectRepository;
+    }
 
     public ResponseEntity<?> createProject(ProjectCreationRequest projectCreationRequest, UserDetailsImpl userDetails) {
         String repositoryName = projectCreationRequest.getRepositoryName();
@@ -45,7 +50,7 @@ public class ProjectService {
                     githubService.generateWebHook(repositoryName, githubToken);
                 }
                 projectRepository.save(project);
-                return ResponseEntity.badRequest().body(new ProjectCreationResponse(repositoryName, projectCreationRequest.getJiraBoardName()));
+                return ResponseEntity.ok().body(new ProjectCreationResponse(repositoryName, projectCreationRequest.getJiraBoardName()));
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body(new MessageResponse("Something went wrong"));
             }
