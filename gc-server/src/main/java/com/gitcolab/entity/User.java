@@ -31,6 +31,7 @@ public class User {
     private  String linkedin;
     private  String github;
     private  String resume;
+    private  String profilePicture;
 
 
 
@@ -51,7 +52,7 @@ public class User {
     public User(String username, String email, String password, String uFname, String uLname, String abc123, String s) {
     }
 
-    public User(String username, String organization, String location, String description, String linkedin, String github, String resume, String x) {
+    public User(String username, String organization, String location, String description, String linkedin, String github, String resume, String profilePicture) {
         this.username = username;
         this.organization = organization;
         this.location = location;

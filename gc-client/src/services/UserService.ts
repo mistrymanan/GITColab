@@ -53,7 +53,7 @@ export async function getUserData(userData: any){
    
     //api endpoint for updating user data -> error being thrown here
     
-    const response = await getData(userData, "/user");
+    const response = await getData(userData["username"], "/user/");
 
     return response;
 }

@@ -7,7 +7,6 @@ import { selectUserData } from '../../redux/userSlice';
 
 
 interface UserProfileProps {
-displayname: string;
   username: string;
   followers: number;
   following: number;
@@ -18,11 +17,11 @@ displayname: string;
   linkedin: string;
   github: string;
   resume: string;
-  skills: string[];
+  profilePicture: string;
+  //skills: string[];
 }
 
 const UserProfile: React.FC<UserProfileProps> = ({
-displayname,
   username,
   followers,
   following,
@@ -33,7 +32,8 @@ displayname,
   linkedin,
   github,
   resume,
-  skills,
+  profilePicture,
+  //skills,
 }) => {
   const [showEditModal, setShowEditModal] = useState(false);
 
@@ -45,23 +45,22 @@ displayname,
     setShowEditModal(false);
   };
 
-  const currentUser = JSON.parse(localStorage.getItem('userProfile') || '{}');
   const rdx_store = store;
-
   const userData = selectUserData(rdx_store.getState().userData!)
 
-  console.log("redux user data: ", userData)
-  console.log("lclstorage user data: ", currentUser);
+  //console.log("redux store user data: ", userData)
+  //console.log("redux store user data profile picture: ", userData["profilePicture"])
  
   return (
-    <Card className="user-profile">
+    <Card className="user-profile" style={{width:'40em', marginRight:'10em'}}>
     
-      <Image src="https://blog.linkedin.com/content/dam/blog/en-us/corporate/blog/2014/07/Anais_Saint-Jude_L4388_SQ.jpg.jpeg" alt="Profile Picture" rounded className="profile-picture" />
+      <Image src={userData["profilePicture"]} alt="Profile Picture" 
+              style={{maxWidth: '100%', height: '30em'}}/>
       <Card.Body>
 
         <Card.Title style={{"paddingBottom":10}}>
           {/*displayname*/}
-          {currentUser["username"]}
+          {userData["username"]}
         </Card.Title>
         {/*
         <Card.Subtitle>
@@ -94,7 +93,9 @@ displayname,
                     <FaCloud />
                   </a>
                 </Card.Text>
+        {/* 
         <Card.Text>Skills:</Card.Text>
+        --- Removed Skills as it is not needed since users can upload resume
         <div className="skills">
           {skills.map((skill) => (
             <Button key={skill} variant="secondary" className="skill-badge">
@@ -102,7 +103,8 @@ displayname,
             </Button>
           ))}
         </div>
-        <Button variant="primary" onClick={handleEditProfile}>
+        */}
+        <Button variant="primary" onClick={handleEditProfile} style={{marginTop:'0.5em'}}>
           Edit Profile
         </Button>
       </Card.Body>
@@ -116,7 +118,8 @@ displayname,
             linkedin,
             github,
             resume,
-            skills,
+            profilePicture,
+            //skills,
           }}
           handleClose={handleModalClose}
         />

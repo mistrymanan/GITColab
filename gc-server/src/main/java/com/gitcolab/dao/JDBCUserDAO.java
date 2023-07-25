@@ -74,7 +74,7 @@ public class JDBCUserDAO implements UserDAO{
         return namedParameterJdbcTemplate
                 .update("UPDATE users SET " +
                                 "`organization` = :organization, `location` = :location, `description` = :description, `linkedin` = :linkedin, `github` = :github," +
-                                "`resume` = :resume" +
+                                "`resume` = :resume, `profilePicture` = :profilePicture" +
                                 " WHERE `username` = :username"
                         ,namedParameters);
     }

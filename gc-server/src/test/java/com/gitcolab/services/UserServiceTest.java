@@ -448,8 +448,10 @@ public class UserServiceTest {
         String resume = "resume";
         String github = "github";
         String linkedin = "linkedin";
+        String profilePicture = "profilePicture";
 
-        UpdateUserProfileRequest updateUserProfileRequest = new UpdateUserProfileRequest(username, organization, location, description , linkedin, github, resume);
+        UpdateUserProfileRequest updateUserProfileRequest = new UpdateUserProfileRequest(username, organization, location,
+                                                            description , linkedin, github, resume, profilePicture);
 
 
         //Act

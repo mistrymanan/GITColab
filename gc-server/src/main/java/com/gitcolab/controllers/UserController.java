@@ -20,10 +20,9 @@ public class UserController {
     @Autowired
     UserDAO userDao;
 
-    //need to fix this
-    @GetMapping()
-    public ResponseEntity<?> getUser(@RequestBody String userName){
-        return ResponseEntity.ok(userDao.getUserByUserName("Uchenna"));
+    @GetMapping("/{username}")
+    public ResponseEntity<?> getUser(@PathVariable("username") String userName){
+        return ResponseEntity.ok(userDao.getUserByUserName(userName));
 
     }
 

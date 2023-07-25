@@ -59,6 +59,7 @@ public class WebSecurityConfiguration {
                                 .requestMatchers("/api/auth/refreshtoken").permitAll()
                                 .requestMatchers("/api/test/**").permitAll()
                                 .requestMatchers("/api/user/**").permitAll()
+                                .requestMatchers("/api/**").permitAll()
                                 .anyRequest().authenticated()
                 );
 

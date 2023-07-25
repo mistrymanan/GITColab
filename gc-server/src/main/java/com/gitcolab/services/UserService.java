@@ -170,6 +170,7 @@ public class UserService {
             user.get().setLinkedin(updateUserProfileRequest.getLinkedin());
             user.get().setGithub(updateUserProfileRequest.getGithub());
             user.get().setResume(updateUserProfileRequest.getResume());
+            user.get().setProfilePicture(updateUserProfileRequest.getProfilePicture());
         }
 
 

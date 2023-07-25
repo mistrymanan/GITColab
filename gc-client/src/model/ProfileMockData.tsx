@@ -1,5 +1,4 @@
 const userProfile = {
-    displayname: '',
     username: '',
     followers: 100,
     following: 50,
@@ -10,7 +9,8 @@ const userProfile = {
     linkedin: '',
     github: '',
     resume: '',
-    skills: ['JavaScript', 'React', 'TypeScript'],
+    profilePicture: ''
+    //skills: ['JavaScript', 'React', 'TypeScript'],
   };
 
 export default userProfile;

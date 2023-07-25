@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Dropdown } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { updateUserProfile, getUserData } from '../../../services/UserService';
+import { updateUserProfile } from '../../../services/UserService';
 import { store } from '../../../store/store';
-import jwt from 'jwt-decode';
-import { updateProfile } from "../../../redux/userSlice";
+import { updateProfile, selectUserData} from "../../../redux/userSlice";
+
 
 /*Start of baseer's code*/
 interface ProfileEditModalProps {
@@ -20,7 +20,8 @@ interface UserProfileData {
   linkedin: string;
   github: string;
   resume: string;
-  skills: string[];
+  profilePicture: string;
+  //skills: string[];
 }
 
 const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
@@ -37,29 +38,32 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
     }));
   };
 
+  /*
   const handleSkillsChange = (selectedSkills: string[]) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       skills: selectedSkills,
     }));
   };
-  
-  const dispatch = useDispatch();
-  const rdx_store = store;
+
+  */
   /*End of baseer's code*/
 
+  const dispatch = useDispatch();
+  const rdx_store = store;
+  const userData = selectUserData(rdx_store.getState().userData!)
     
-    /*
-    my code per keyur's request but commented out for testing
-    //State handlers
-    const [username, setUsername] = useState('');
-    const [organization, setOrganization] = useState('');
-    const [location, setLocation] = useState('');
-    const [description, setDescription] = useState('');
-    const [linkedin, setLinkedin] = useState('');
-    const [github, setGithub] = useState('');
-    const [resume, setResume] = useState('');
-    const dispatch = useDispatch();
+  /*
+  my code per keyur's request but commented out for testing
+  //State handlers
+  const [username, setUsername] = useState('');
+  const [organization, setOrganization] = useState('');
+  const [location, setLocation] = useState('');
+  const [description, setDescription] = useState('');
+  const [linkedin, setLinkedin] = useState('');
+  const [github, setGithub] = useState('');
+  const [resume, setResume] = useState('');
+  const dispatch = useDispatch();
   */
 
   const handleSubmit = async (event: any) => {
@@ -68,10 +72,43 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
     event.preventDefault();
 
     if(form.checkValidity() === true){
-      const currentUser = JSON.parse(localStorage.getItem('userProfile') || '{}');
-      const data = {username : currentUser["username"], organization: formData.organization, location: 
+
+      console.log(userData);
+
+      //If any field of the form is empty, populate the form data with the current state of that field
+      //That way, the front-end only changes when fields are populated by the user.
+      if(formData.profilePicture.length < 1){
+        formData.profilePicture = userData["profilePicture"];
+      }
+
+      if(formData.organization.length < 1){
+        formData.organization = userData["organization"];
+      }
+
+      if(formData.location.length < 1){
+        formData.location = userData["location"];
+      }
+
+      if(formData.description.length < 1){
+        formData.description = userData["description"];
+      }
+
+      if(formData.linkedin.length < 1){
+        formData.linkedin = userData["linkedin"];
+      }
+
+      if(formData.github.length < 1){
+        formData.github = userData["github"];
+      }
+
+      if(formData.resume.length < 1){
+        formData.resume = userData["resume"];
+      }
+      
+      //preparing profile data to be updated 
+      const data = {username : userData["username"], organization: formData.organization, location: 
                     formData.location, description: formData.description, linkedin: formData.linkedin, 
-                    github: formData.github, resume: formData.resume}
+                    github: formData.github, resume: formData.resume, profilePicture: formData.profilePicture}
   
       const response = await updateUserProfile(data);
 
@@ -82,8 +119,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
           })
       )
       }
-
-      //decrypt current token, send get request to get newly updated fields, update state of store  -> not neede
+      console.log(userData);
       
     }
 
@@ -117,7 +153,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             <Form.Control
               type="text"
               name="organization"
-              placeholder='Enter your Organization'
+              placeholder='Enter Your Organization'
               value={formData.organization}
               onChange={handleChange}
             />
@@ -127,7 +163,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             <Form.Control
               type="text"
               name="location"
-              placeholder='Enter your Location'
+              placeholder='Enter Your Location'
               value={formData.location}
               onChange={handleChange}
             />
@@ -138,7 +174,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
               as="textarea"
               rows={3}
               name="description"
-              placeholder='Enter a Description'
+              placeholder='Enter Profile Description'
               value={formData.description}
               onChange={handleChange}
             />
@@ -148,7 +184,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             <Form.Control
               type="text"
               name="linkedin"
-              placeholder='Enter your LinkedIn Profile Link'
+              placeholder='Enter Your LinkedIn Profile Link'
               value={formData.linkedin}
               onChange={handleChange}
             />
@@ -158,7 +194,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             <Form.Control
               type="text"
               name="github"
-              placeholder='Enter your Github Profile Link'
+              placeholder='Enter Your Github Profile Link'
               value={formData.github}
               onChange={handleChange}
             />
@@ -167,11 +203,23 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             <Form.Label>Resume</Form.Label>
             <Form.Control
               type="text"
+              placeholder='Enter Your Resume Link'
               name="resume"
               value={formData.resume}
               onChange={handleChange}
             />
           </Form.Group>
+          <Form.Group controlId="profilePicture">
+            <Form.Label>Profile Picture</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder='Enter Profile Picture Link'
+              name="profilePicture"
+              value={formData.profilePicture}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          {/*--- Removed Skills as it is not needed since users can upload resume
           <Form.Group controlId="skills">
             <Form.Label>Skills</Form.Label>
             <Dropdown>
@@ -194,17 +242,20 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
                 >
                   JavaScript
                 </Dropdown.Item>
-                {/* Add more dropdown items for other skills */}
+               
               </Dropdown.Menu>
             </Dropdown>
+            
             {formData.skills.map((skill) => (
               <span key={skill} className="skill-button">
 
                     
               </span>
             ))}
+            
           </Form.Group>
-          <Button variant="primary" type="submit">
+          */}
+          <Button variant="primary" type="submit" style={{marginTop:'2em'}}>
             Save Changes
           </Button>
         </Form>

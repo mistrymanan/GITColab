@@ -1,7 +1,6 @@
 import axios from "axios";
 
 const API_URL = "http://localhost:8080/api";
-//const USER_API_URL = "http://localhost:8080/userApii/user";
 
 export async function postData(body: string, url: string, token?: string) {
     try {
@@ -45,20 +44,16 @@ export async function putData(body: string, url: string, token?: string) {
     }
 }
 
-export async function getData(body: string, url: string, token?: string) {
+export async function getData(userName: string, url: string, token?: string) {
     try {
         var myHeaders: any = {};
         myHeaders["Content-Type"] = "application/json";
         myHeaders["Accept"] = "application/json";
-        //myHeaders["Access-Control-Allow-Origin"] = '*';
+        myHeaders["Access-Control-Allow-Origin"] = '*';
+
         if (token) myHeaders["authorization"] = `Bearer ${token}`;
 
-        
-        var requestOptions = {
-            headers: myHeaders
-        };
-
-        const response = await axios.get(API_URL + url);
+        const response = await axios.get(API_URL + url + userName);
         
         return response;
 

@@ -35,4 +35,7 @@ public class UpdateUserProfileRequest {
     //per discussion with Baseer, resume will just be a link to a google drive.
     @NotBlank
     private String resume;
+
+    @NotBlank
+    private String profilePicture;
 }

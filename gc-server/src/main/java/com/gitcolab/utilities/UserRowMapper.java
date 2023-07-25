@@ -26,6 +26,7 @@ public class UserRowMapper implements RowMapper<User> {
                 .linkedin(rs.getString("linkedin"))
                 .github(rs.getString("github"))
                 .resume(rs.getString("resume"))
+                .profilePicture(rs.getString("profilePicture"))
                 .build();
         return user;
     }

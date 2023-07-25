@@ -2,7 +2,7 @@ import { Card, Button, Form } from "react-bootstrap";
 import "../style.css";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { loginUser } from "../../services/UserService";
+import { loginUser, getUserData } from "../../services/UserService";
 import { useDispatch } from "react-redux";
 import { login, updateProfile } from "../../redux/userSlice";
 
@@ -40,19 +40,33 @@ const Login = () => {
                 )
 
                 localStorage.setItem('token', token);
-                //believe that we need to store entire user data to local storage
-                //decrypt token then make api calls with that.
-                localStorage.setItem('userProfile', JSON.stringify(response.data));    
-                const currentUser = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                
+                const user_data = await getUserData(data); //response from get request
 
-                //super hacky but it works xD
-                //ideally will want to dispatch the updateProfile action and set the value to the response of a get request that returns the hard coded values below.
-                //add these too ? private int followers; private int stars; private int following;
+                //if user successfully logs in, dispatch updateProfile action to set state of currently logged in user with currently logged in users' data.
+                //need add these too based on github API ->  private int followers; private int stars; private int following;
                 dispatch(
                     updateProfile({
-                        userData: {username : currentUser["username"], organization:'', location: '', description: '', linkedin: '', github: '', resume: ''}
+                        userData: {username : user_data.data["username"], organization:  user_data.data["organization"], 
+                                   location: user_data.data["location"], description: user_data.data["description"], 
+                                   linkedin: user_data.data["linkedin"], 
+                                   github: user_data.data["github"], resume: user_data.data["resume"], profilePicture: user_data.data["profilePicture"]}
                     })
                 )
+
+                if(user_data.data["profilePicture"] === undefined || user_data.data["profilePicture"] === null ){
+                    dispatch(
+                        updateProfile({
+                            userData: {username : user_data.data["username"], organization:  user_data.data["organization"], 
+                                       location: user_data.data["location"], description: user_data.data["description"], 
+                                       linkedin: user_data.data["linkedin"], 
+                                       github: user_data.data["github"], resume: user_data.data["resume"], 
+                                       profilePicture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                        })
+                    )
+                }
+
+            
                 
                 navigate('/dashboard');
             } else {

@@ -28,6 +28,7 @@ public class UserTest {
                 .linkedin("linkedInLink")
                 .github("githubLink")
                 .resume("resumeLink")
+                .profilePicture("profilePicture")
                 .roles(new HashSet<>())
                 .build();
     }
@@ -49,6 +50,7 @@ public class UserTest {
         Assertions.assertEquals("linkedInLink", user.getLinkedin());
         Assertions.assertEquals("githubLink", user.getGithub());
         Assertions.assertEquals("resumeLink", user.getResume());
+        Assertions.assertEquals("profilePicture", user.getProfilePicture());
     }
 
     @Test
@@ -56,7 +58,7 @@ public class UserTest {
         User newUser = new User("FNameLName", "FName.LName@example.com", "password456", "FName", "LName");
 
         //created new testUser
-        User newUserUche = new User("Uchenna",  "Dalhousie",  "Halifax", "fakeDescription", "linkedInLink", "githubLink", "resumeLink", "");
+        User newUserUche = new User("Uchenna",  "Dalhousie",  "Halifax", "fakeDescription", "linkedInLink", "githubLink", "resumeLink", "profilePicture");
 
         Assertions.assertEquals("FNameLName", newUser.getUsername());
         Assertions.assertEquals("FName.LName@example.com", newUser.getEmail());

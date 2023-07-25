@@ -13,7 +13,8 @@ class UpdateUserProfileRequestTest {
         // Arrange
         String expectedUsername = "Uchenna";
         UpdateUserProfileRequest userProfileRequest = new UpdateUserProfileRequest("Uchenna","Dalhousie",
-                                                                            "Halifax","testDesc","linkedIn","github", "resume");
+                                                                            "Halifax","testDesc",
+                                                                            "linkedIn","github", "resume", "profilePicture");
         // Act
         String actualUsername = userProfileRequest.getUsername();
 
@@ -40,7 +41,7 @@ class UpdateUserProfileRequestTest {
         // Arrange
         String expectedOrganization = "Dalhousie";
         UpdateUserProfileRequest userProfileRequest = new UpdateUserProfileRequest("Uchenna","Dalhousie",
-                "Halifax","testDesc","linkedIn","github", "resume");
+                "Halifax","testDesc","linkedIn","github", "resume", "profilePicture");
         // Act
         String actualOrganization = userProfileRequest.getOrganization();
 
@@ -66,7 +67,7 @@ class UpdateUserProfileRequestTest {
         // Arrange
         String expectedLocation= "Halifax";
         UpdateUserProfileRequest userProfileRequest = new UpdateUserProfileRequest("Uchenna","Dalhousie",
-                "Halifax","testDesc","linkedIn","github", "resume");
+                "Halifax","testDesc","linkedIn","github", "resume", "profilePicture");
         // Act
         String actualLocation = userProfileRequest.getLocation();
 
@@ -92,7 +93,7 @@ class UpdateUserProfileRequestTest {
         // Arrange
         String expectedDescription= "testDesc";
         UpdateUserProfileRequest userProfileRequest = new UpdateUserProfileRequest("Uchenna","Dalhousie",
-                "Halifax","testDesc","linkedIn","github", "resume");
+                "Halifax","testDesc","linkedIn","github", "resume", "profilePicture");
         // Act
         String actualDescription = userProfileRequest.getDescription();
 
@@ -118,7 +119,7 @@ class UpdateUserProfileRequestTest {
         // Arrange
         String expectedLinkedIn = "linkedIn";
         UpdateUserProfileRequest userProfileRequest = new UpdateUserProfileRequest("Uchenna","Dalhousie",
-                "Halifax","testDesc","linkedIn","github", "resume");
+                "Halifax","testDesc","linkedIn","github", "resume", "profilePicture");
         // Act
         String actualLinkedIn = userProfileRequest.getLinkedin();
 
@@ -144,7 +145,7 @@ class UpdateUserProfileRequestTest {
         // Arrange
         String expectedGitHub = "github";
         UpdateUserProfileRequest userProfileRequest = new UpdateUserProfileRequest("Uchenna","Dalhousie",
-                "Halifax","testDesc","linkedIn","github", "resume");
+                "Halifax","testDesc","linkedIn","github", "resume", "profilePicture");
         // Act
         String actualGitHub = userProfileRequest.getGithub();
 
@@ -170,7 +171,7 @@ class UpdateUserProfileRequestTest {
         // Arrange
         String expectedResume = "resume";
         UpdateUserProfileRequest userProfileRequest = new UpdateUserProfileRequest("Uchenna","Dalhousie",
-                "Halifax","testDesc","linkedIn","github", "resume");
+                "Halifax","testDesc","linkedIn","github", "resume", "profilePicture");
         // Act
         String actualResume = userProfileRequest.getResume();
 
@@ -189,5 +190,30 @@ class UpdateUserProfileRequestTest {
 
         // Assert
         assertEquals(resume, userProfileRequest.getResume());
+    }
+    @Test
+    void getProfilePicture_ShouldReturnProfilePicture() {
+        // Arrange
+        String expectedProfilePicture = "profilePicture";
+        UpdateUserProfileRequest userProfileRequest = new UpdateUserProfileRequest("Uchenna","Dalhousie",
+                "Halifax","testDesc","linkedIn","github", "resume", "profilePicture");
+        // Act
+        String actualProfilePicture = userProfileRequest.getProfilePicture();
+
+        // Assert
+        assertEquals(expectedProfilePicture, actualProfilePicture);
+    }
+
+    @Test
+    void setProfilePicture_ShouldReturnProfilePicture() {
+        // Arrange
+        String profilePicture = "profilePicture";
+        UpdateUserProfileRequest userProfileRequest = new UpdateUserProfileRequest();
+
+        // Act
+        userProfileRequest.setProfilePicture(profilePicture);
+
+        // Assert
+        assertEquals(profilePicture, userProfileRequest.getProfilePicture());
     }
 }
