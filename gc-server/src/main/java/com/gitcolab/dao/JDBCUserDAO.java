@@ -47,7 +47,7 @@ public class JDBCUserDAO implements UserDAO{
 
     @Override
     public Optional<User> getUserByUserName(String username) {
-        User user=jdbcTemplate.queryForObject("select * from User u where u.username=?",new Object[]{username}, new UserRowMapper());
+        User user = jdbcTemplate.queryForObject("select * from User u where u.username=?",new Object[]{username}, new UserRowMapper());
         return Optional.of(user);
     }
 
@@ -72,7 +72,7 @@ public class JDBCUserDAO implements UserDAO{
     public int updateProfile(Object o) {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(o);
         return namedParameterJdbcTemplate
-                .update("UPDATE users SET " +
+                .update("UPDATE User SET " +
                                 "`organization` = :organization, `location` = :location, `description` = :description, `linkedin` = :linkedin, `github` = :github," +
                                 "`resume` = :resume, `profilePicture` = :profilePicture" +
                                 " WHERE `username` = :username"

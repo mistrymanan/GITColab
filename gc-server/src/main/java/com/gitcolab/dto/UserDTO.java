@@ -1,32 +1,44 @@
 package com.gitcolab.dto;
 
+import com.gitcolab.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Optional;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
+    private long id;
     private String username;
-    /*Added a bunch of fields but need some clarity as to where i would use a user DTO.
-    private int id;
-    private String password;
     private String firstName;
     private String lastName;
     private String email;
-    private String otp;
-    private String otpExpiry;
     private String organization;
     private String location;
     private String description;
     private String linkedin;
     private String github;
     private String resume;
-    private int followers;
-    private int stars;
-    private int following;
-    */
+    private String profilePicture;
 
-
+    UserDTO(String username) {
+        this.username = username;
+    }
+    public UserDTO(User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.email = user.getEmail();
+        this.organization = user.getOrganization();
+        this.location = user.getLocation();
+        this.description = user.getDescription();
+        this.linkedin = user.getLinkedin();
+        this.github = user.getGithub();
+        this.resume = user.getResume();
+        this.profilePicture = user.getProfilePicture();
+    }
 }

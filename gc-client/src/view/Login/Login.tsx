@@ -2,9 +2,9 @@ import { Card, Button, Form } from "react-bootstrap";
 import "../style.css";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { loginUser, getUserData } from "../../services/UserService";
+import { loginUser } from "../../services/UserService";
 import { useDispatch } from "react-redux";
-import { login, updateProfile } from "../../redux/userSlice";
+import { login } from "../../redux/userSlice";
 
 const Login = () => {
     const [invalid, setInvalid] = useState(false);

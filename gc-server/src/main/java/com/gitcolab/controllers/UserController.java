@@ -17,13 +17,10 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     UserService userService;
-    @Autowired
-    UserDAO userDao;
 
     @GetMapping("/{username}")
     public ResponseEntity<?> getUser(@PathVariable("username") String userName){
-        return ResponseEntity.ok(userDao.getUserByUserName(userName));
-
+        return ResponseEntity.ok(userService.getUserByUsername(userName));
     }
 
     @PutMapping("/user-profile")

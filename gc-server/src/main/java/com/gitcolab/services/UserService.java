@@ -9,6 +9,7 @@ import com.gitcolab.repositories.UserRepository;
 import com.gitcolab.security.jwt.JwtUtils;
 import com.gitcolab.utilities.EmailSender;
 import com.gitcolab.utilities.HelperUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -159,6 +160,18 @@ public class UserService {
         user.get().setPassword(encoder.encode(resetPasswordRequest.getPassword()));
         userRepository.update(user.get());
         return ResponseEntity.ok(new MessageResponse("Password reset successfully!"));
+    }
+
+    public ResponseEntity<?> getUserByUsername(String username) {
+        if(!HelperUtils.isValidString(username))
+            return ResponseEntity.badRequest().body(new MessageResponse("Invalid username"));
+
+        Optional<User> user = userRepository.findByUsername(username);
+        if(!user.isPresent())
+            return ResponseEntity.badRequest().body(new MessageResponse("User not exists"));
+
+        UserDTO userDTO = new UserDTO(user.get());
+        return  ResponseEntity.ok(userDTO);
     }
 
     public ResponseEntity<?> updateUserProfile(UpdateUserProfileRequest updateUserProfileRequest) {
