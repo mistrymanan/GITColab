@@ -7,6 +7,7 @@ export async function postData(body: string, url: string, token?: string) {
         var myHeaders: any = {};
         myHeaders["Content-Type"] = "application/json";
         myHeaders["Accept"] = "application/json";
+        myHeaders["Access-Control-Allow-Origin"] = "*";
         if (token) myHeaders["authorization"] = `Bearer ${token}`;
 
         var requestOptions = {
@@ -16,7 +17,7 @@ export async function postData(body: string, url: string, token?: string) {
         const response = await axios.post(API_URL + url, body, requestOptions);
         return response;
     } catch (error: any) {
-        console.log("error", error.response.data);
+        console.log("error", error);
         return error;
     }
 }

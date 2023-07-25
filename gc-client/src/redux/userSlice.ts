@@ -11,20 +11,18 @@ export const userSlice = createSlice({
             state.user = action.payload;
         },
         logout: (state) => {
-            state.user = null
-            state.userData = {}
+            state.user = null;
         },
-        /*This reducer handles updating the state of user profile information after an update action*/
-        updateProfile: (state, action) => {
-            state.userData = action.payload;
+        user: (state, action) => {
+            state.user = action.payload;
         }
     }
 });
 
-export const { login, logout, updateProfile } = userSlice.actions;
+export const { login, logout } = userSlice.actions;
 
 export const selectUser = (state: any) => state.user;
 
-export const selectUserData = (state:any) => state.userData;
+// export const getUserData = (state: any) => state.user;
 
 export default userSlice.reducer;

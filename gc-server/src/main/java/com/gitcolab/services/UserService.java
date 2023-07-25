@@ -91,6 +91,10 @@ public class UserService {
 
         userRepository.save(user);
 
+        boolean sendEmail = emailSender.sendEmail(registerUserRequest.getEmail(),
+                "Welcome to GitColab",
+                "Hello " + user.getFirstName() + ",\n\nWelcome to GitColab! Happy integrating things! \n\nTeam GitColab!");
+
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 

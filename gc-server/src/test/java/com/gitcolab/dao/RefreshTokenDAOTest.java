@@ -4,12 +4,14 @@ import com.gitcolab.entity.RefreshToken;
 import com.gitcolab.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 class RefreshTokenDAOTest {
 
     private RefreshTokenDAO refreshTokenDAO;

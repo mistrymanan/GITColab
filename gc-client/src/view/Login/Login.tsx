@@ -30,44 +30,23 @@ const Login = () => {
         if (form.checkValidity() === true) {
             const data = { username: username, password: password };
             const response = await loginUser(data);
-            let token;
+            let userData;
             if (response?.data) {
-                token = response.data.token;
+                userData = response.data;
                 dispatch(
                     login({
-                        token: token
+                        token: userData.token,
+                        email: userData.email,
+                        username: userData.username,
+                        id: userData.id,
+                        refreshToken: userData.refreshToken
                     })
                 )
-
-                localStorage.setItem('token', token);
-                
-                const user_data = await getUserData(data); //response from get request
-
-                //if user successfully logs in, dispatch updateProfile action to set state of currently logged in user with currently logged in users' data.
-                //need add these too based on github API ->  private int followers; private int stars; private int following;
-                dispatch(
-                    updateProfile({
-                        userData: {username : user_data.data["username"], organization:  user_data.data["organization"], 
-                                   location: user_data.data["location"], description: user_data.data["description"], 
-                                   linkedin: user_data.data["linkedin"], 
-                                   github: user_data.data["github"], resume: user_data.data["resume"], profilePicture: user_data.data["profilePicture"]}
-                    })
-                )
-
-                if(user_data.data["profilePicture"] === undefined || user_data.data["profilePicture"] === null ){
-                    dispatch(
-                        updateProfile({
-                            userData: {username : user_data.data["username"], organization:  user_data.data["organization"], 
-                                       location: user_data.data["location"], description: user_data.data["description"], 
-                                       linkedin: user_data.data["linkedin"], 
-                                       github: user_data.data["github"], resume: user_data.data["resume"], 
-                                       profilePicture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
-                        })
-                    )
-                }
-
-            
-                
+                localStorage.setItem('token', userData.token);
+                localStorage.setItem('email', userData.email);
+                localStorage.setItem('username', userData.username);
+                localStorage.setItem('id', userData.id);
+                localStorage.setItem('refreshToken', userData.refreshToken);
                 navigate('/dashboard');
             } else {
                 event.stopPropagation();
