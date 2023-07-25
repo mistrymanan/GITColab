@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
@@ -138,4 +139,22 @@ class JDBCUserDAOTest {
 
         verify(jdbcTemplate).queryForObject(anyString(), any(Object[].class), any(Class.class));
     }
+
+    @Test
+    void testUpdateProfile(){
+        //arrange
+        User user = new User();
+        int expected = 0;
+
+        //act
+        when(namedParameterJdbcTemplate.update(anyString(),any(SqlParameterSource.class))).thenReturn(expected);
+        int result = userDAO.updateProfile(user);
+
+        //assert
+        assertEquals(expected, result);
+
+        //verify
+        verify(namedParameterJdbcTemplate, times(1)).update(anyString(), any(SqlParameterSource.class));
+    }
+
 }

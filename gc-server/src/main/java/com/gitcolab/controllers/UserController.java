@@ -1,17 +1,31 @@
 package com.gitcolab.controllers;
 
-import com.gitcolab.dto.UserDTO;
-import com.gitcolab.entity.User;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController()
+import com.gitcolab.dao.UserDAO;
+import com.gitcolab.dto.*;
+
+import com.gitcolab.services.UserService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+@RestController
 @RequestMapping("/api/user")
 public class UserController {
-    @GetMapping()
-    public ResponseEntity<UserDTO> getUserExample(){
-        return ResponseEntity.ok(new UserDTO("username"));
+    @Autowired
+    UserService userService;
+
+    @GetMapping("/{username}")
+    public ResponseEntity<?> getUser(@PathVariable("username") String userName){
+        return ResponseEntity.ok(userService.getUserByUsername(userName));
     }
+
+    @PutMapping("/user-profile")
+    public ResponseEntity<?> updateUserProfile(@RequestBody UpdateUserProfileRequest updateUserProfileRequest) {
+        return userService.updateUserProfile(updateUserProfileRequest);
+    }
+
 }

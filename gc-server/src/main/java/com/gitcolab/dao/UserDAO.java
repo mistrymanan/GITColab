@@ -12,4 +12,7 @@ public interface UserDAO extends DAO  {
 
     public boolean existsByEmail(String email);
 
+    //new method to eliminate confusion
+    public int updateProfile(Object o);
+
 }
