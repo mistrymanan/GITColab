@@ -19,4 +19,5 @@ public interface ProjectRepository {
     List<Map<String, Object>> getAllContributors(int projectId);
     int addContributor(int userId, int projectId);
     List<Map<String, Object>> getProjectContributorMap();
+    String getGithubTokenByUserId(Long id);
 }

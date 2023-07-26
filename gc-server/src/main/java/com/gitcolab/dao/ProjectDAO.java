@@ -12,4 +12,5 @@ public interface ProjectDAO extends DAO {
     int addContributor(int userId, int projectId);
     Optional<Project> getProjectByRepositoryName(String repositoryName);
     List<Map<String, Object>> getProjectContributorMap();
+    String getGithubTokenByUserId(Long id);
 }

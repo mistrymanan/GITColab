@@ -26,3 +26,8 @@ export async function addCollaborator(collaboratorDetails: any, token: string) {
     const response = await postData(collaboratorDetails, "/project/addContributor", token);
     return response;
 }
+
+export async function getDashboardData(token: string){
+    const response = await getData(`/project/dashboard`, token);
+    return response;
+}
