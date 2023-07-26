@@ -1,5 +1,4 @@
 import { Card, CardGroup, Col, Container, Row } from "react-bootstrap";
-import DashboardCard from "../../components/ui/Dashboard/Card";
 
 const Dashboard = () => {
     return (
