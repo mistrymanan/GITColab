@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.HashMap;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,9 +16,13 @@ import lombok.ToString;
 public class CreateIssueRequest {
         private Fields fields;
 
-        public CreateIssueRequest(GithubIssueEvent githubIssueEvent,String projectId,String reporterId) {
+        public CreateIssueRequest(GithubIssueEvent githubIssueEvent, List<IssueType> issueTypeList, String projectId, String reporterId) {
+                HashMap<String,String> issueMap=new HashMap<>();
+                issueTypeList.forEach(issueType -> {
+                        issueMap.put(issueType.getName(),issueType.getId());
+                });
                 String title=githubIssueEvent.getIssue().getTitle();
-                String issueTypeId=title.contains("Bug") || title.contains("bug") ? "10005":"10004";
+                String issueTypeId=title.contains("Bug") || title.contains("bug") ? issueMap.get("Bug"): issueMap.get("Task");
                 StringBuilder body=new StringBuilder();
                 body.append("Issue Description:\n");
 

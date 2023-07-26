@@ -31,6 +31,10 @@ public interface AtlassianServiceClient {
     MySelfResponse getUserDetails(@PathVariable String cloudId,@RequestHeader("Authorization") String bearerToken);
 
     @PostExchange("/ex/jira/{cloudId}/rest/api/3/issue")
-    ResponseEntity<Void> createIssueRequest(@PathVariable String cloudId, @RequestHeader("Authorization") String bearerToken, @RequestBody CreateIssueRequest createIssueRequest);
+    ResponseEntity<?> createIssueRequest(@PathVariable String cloudId, @RequestHeader("Authorization") String bearerToken, @RequestBody CreateIssueRequest createIssueRequest);
+
+    @GetExchange("/ex/jira/{cloudId}/rest/api/3/issuetype/project?projectId={projectId}")
+    List<IssueType> getIssues(@PathVariable String cloudId,@PathVariable String projectId,@RequestHeader("Authorization") String bearerToken);
+
 
 }

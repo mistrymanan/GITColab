@@ -108,9 +108,10 @@ public class AtlassianService {
             Optional<MySelfResponse> mySelfResponse=getUserDetails(bearerToken,accessibleResource.get().getId());
             logger.info("MySelfResponse->"+accessibleResource);
             if(!mySelfResponse.isEmpty()){
-                CreateIssueRequest createIssueRequest = new CreateIssueRequest(githubIssueEvent,projectId,mySelfResponse.get().getAccountId());
+                List<IssueType> issueTypes=atlassianServiceClient.getIssues(accessibleResource.get().getId(),"10010",bearerToken);
+                CreateIssueRequest createIssueRequest = new CreateIssueRequest(githubIssueEvent,issueTypes,projectId,mySelfResponse.get().getAccountId());
                 logger.info("CreateIssueRequest->"+createIssueRequest);
-                ResponseEntity<Void> response = atlassianServiceClient.createIssueRequest(accessibleResource.get().getId(),bearerToken,createIssueRequest);
+                ResponseEntity<?> response = atlassianServiceClient.createIssueRequest(accessibleResource.get().getId(),bearerToken,createIssueRequest);
                 logger.info("Response From atlassianServiceClient!"+response);
                 return response;
 //                return atlassianServiceClient.createIssueRequest(accessibleResource.get().getId(),bearerToken,createIssueRequest);
