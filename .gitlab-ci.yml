@@ -22,14 +22,14 @@ build:server:
   stage: build
   script:
     - cd gc-server
-    - mvn compile
+    - mvn compile -Dserver.port=8080
 
 test:server:
   image: maven:3.8.7-openjdk-18
   stage: test
   script:
     - cd gc-server
-    - mvn test
+    - mvn test -Dserver.port=8080
 
 build:client:
   image: node:latest
