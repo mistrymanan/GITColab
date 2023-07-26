@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
 import { updateUserProfile } from '../../../services/UserService';
-import { store } from '../../../store/store';
-import { useNavigate } from 'react-router';
-// import { updateProfile, selectUserData} from "../../../redux/userSlice";
 
-
-/*Start of baseer's code*/
 interface ProfileEditModalProps {
   userProfile: UserProfileData;
   handleClose: () => void;

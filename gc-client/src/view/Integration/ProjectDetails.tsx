@@ -25,7 +25,7 @@ const ProjectDetails = () => {
         return contributorsList.map((item: any) => {
             return { contributorName: item.username, contributorRole: <>{projectDetails.userId === item.userId ? (<Badge bg="info">Owner</Badge>) : (<Badge bg="primary">Contributor</Badge>)}</> }
         })
-    }, [contributorsList, userDataStore.id])
+    }, [contributorsList, projectDetails.userId])
 
     useEffect(() => {
         async function fetchProjectData() {
@@ -39,7 +39,7 @@ const ProjectDetails = () => {
             }
         }
         fetchProjectData()
-    }, [userDataStore.token])
+    }, [projectId, userDataStore.token])
 
     const columns = [
         {
@@ -88,7 +88,9 @@ const ProjectDetails = () => {
                 <div>
                     <div className="d-flex flex-row my-2 justify-content-between py-3">
                         <h1>Contributors</h1>
-                        <Button variant="dark" type="button" onClick={handleModalOpen}>Add Contributor</Button>
+                        {projectDetails.userId === userDataStore.id && (
+                            <Button variant="dark" type="button" onClick={handleModalOpen}>Add Contributor</Button>
+                        )}
                     </div>
                     <MDBDataTableV5 data={{ rows, columns }} bordered hover></MDBDataTableV5>
                 </div>

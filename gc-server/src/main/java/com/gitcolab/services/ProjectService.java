@@ -62,6 +62,8 @@ public class ProjectService {
                     githubService.generateWebHook(repositoryName, githubToken);
                 }
                 projectRepository.save(project);
+                Optional<Project> createdProject = projectRepository.findByRepositoryName(repositoryName);
+                projectRepository.addContributor(Math.toIntExact(userDetails.getId()), createdProject.get().getId());
                 return ResponseEntity.ok().body(new ProjectCreationResponse(repositoryName, projectCreationRequest.getJiraBoardName()));
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body(new MessageResponse("Something went wrong"));

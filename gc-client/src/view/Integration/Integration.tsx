@@ -94,6 +94,7 @@ const Integration = () => {
         setOpenAddProjectModal(true);
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const handleClick = (id: any) => {
         navigate(`/integration/${id}`);
     }
@@ -115,7 +116,7 @@ const Integration = () => {
         return projectList.map((item: any)=>{
             return{ projectName: item.repositoryName, projectRole: <>{item.userId === userDataStore.id ? (<Badge bg="info">Owner</Badge>) : (<Badge bg="primary">Contributor</Badge>)}</>, clickEvent: () => handleClick(item.id) }
         })
-    },[projectList, userDataStore.id])
+    },[handleClick, projectList, userDataStore.id])
 
     useEffect(() => {
         async function fetchProjectData() {
