@@ -60,7 +60,7 @@ public class AtlassianService {
         } else {
             toolTokenManagerRepository.update(new ToolTokenManager(EnumIntegrationType.ATLASSIAN, response.getBody().getAccess_token(), userDetails.getId()));
         }
-        return response;
+        return ResponseEntity.ok().body(response);
     }
 
     public Optional<AccessibleResource> getAccessibleResources(String bearerToken){

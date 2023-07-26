@@ -15,9 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+
 @RestController
 @RequestMapping("/api/project")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class ProjectController {
 
     Logger logger= LoggerFactory.getLogger(ProjectController.class);

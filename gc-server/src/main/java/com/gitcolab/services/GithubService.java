@@ -164,7 +164,7 @@ public class GithubService {
             String repositoryFullName = github.getMyself().getLogin() + '/' + repositoryName;
             GHRepository repository = github.getRepository(repositoryFullName);
 
-            URL webhookURL = new URL("https://webhook.site/9637d374-dc0a-436a-bf2a-6cac4b1392af");
+            URL webhookURL = new URL("https://git-colab-0657fd479701.herokuapp.com/api/project/createJira");
             Collection<GHEvent> events = new ArrayList<>();
             events.add(GHEvent.ISSUES);
 
