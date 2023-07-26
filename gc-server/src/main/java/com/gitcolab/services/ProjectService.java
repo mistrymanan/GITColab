@@ -90,12 +90,14 @@ public class ProjectService {
     }
 
     public ResponseEntity<?> createJira(GithubIssueEvent githubIssueEvent) {
-
         String[] githubRepoSegments = githubIssueEvent.getRepository().getFull_name().split("/");
         String githubUserName=githubRepoSegments[0];
         String repositoryName=githubRepoSegments[1];
         Optional<ToolTokenManager> toolTokenManager=toolTokenManagerRepository.getByRepositoryOwner(githubUserName, EnumIntegrationType.ATLASSIAN);
+        logger.info("Data From Tool Token Manager->"+toolTokenManager);
+        logger.info(toolTokenManager.toString());
         Optional<Project> project= projectRepository.getProjectByRepositoryNameAndOwner(repositoryName,githubUserName);
+        logger.info("Data From Project -> "+project);
         if(!toolTokenManager.isEmpty()){
             String atlassianToken="Bearer "+toolTokenManager.get().getToken();
             atlassianService.createIssue(githubIssueEvent,project.get().getAtlassianProjectId(),atlassianToken);

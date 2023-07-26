@@ -4,10 +4,12 @@ import com.gitcolab.dro.project.GithubIssueEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class CreateIssueRequest {
         private Fields fields;
 

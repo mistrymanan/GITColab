@@ -10,6 +10,8 @@ import com.gitcolab.entity.ToolTokenManager;
 import com.gitcolab.repositories.ProjectRepository;
 import com.gitcolab.repositories.ToolTokenManagerRepository;
 import com.gitcolab.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.util.Random;
 @Service
 public class AtlassianService {
 
+    Logger logger= LoggerFactory.getLogger(AtlassianService.class);
 
     @Value("${gitcolab.app.atlassian.clientSecret}")
     private String ATLASSIAN_CLIENT_SECRET;
@@ -95,12 +98,19 @@ public class AtlassianService {
     }
 
     public ResponseEntity<?> createIssue(GithubIssueEvent githubIssueEvent,String projectId,String bearerToken){
+        logger.info("Creating Issue");
         Optional<AccessibleResource> accessibleResource=getAccessibleResources(bearerToken);
+        logger.info("Accessible Resource->"+accessibleResource);
         if(!accessibleResource.isEmpty()){
             Optional<MySelfResponse> mySelfResponse=getUserDetails(bearerToken,accessibleResource.get().getId());
+            logger.info("MySelfResponse->"+accessibleResource);
             if(!mySelfResponse.isEmpty()){
                 CreateIssueRequest createIssueRequest = new CreateIssueRequest(githubIssueEvent,projectId,mySelfResponse.get().getAccountId());
-                return atlassianServiceClient.createIssueRequest(accessibleResource.get().getId(),bearerToken,createIssueRequest);
+                logger.info("CreateIssueRequest->"+createIssueRequest);
+                ResponseEntity<Void> response = atlassianServiceClient.createIssueRequest(accessibleResource.get().getId(),bearerToken,createIssueRequest);
+                logger.info("Response From atlassianServiceClient!"+response);
+                return response;
+//                return atlassianServiceClient.createIssueRequest(accessibleResource.get().getId(),bearerToken,createIssueRequest);
             }
         }
         return ResponseEntity.badRequest().body(new MessageResponse("Something went wrong while creating JIRA!"));

@@ -7,6 +7,8 @@ import com.gitcolab.services.GithubService;
 import com.gitcolab.services.ProjectService;
 import com.gitcolab.services.UserDetailsImpl;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/project")
 public class ProjectController {
 
+    Logger logger= LoggerFactory.getLogger(ProjectController.class);
     @Autowired
     GithubService githubService;
 
@@ -30,6 +33,7 @@ public class ProjectController {
 
     @PostMapping(value = "/createJira",headers="Accept=application/json")
     public ResponseEntity<?> generateJira(@RequestBody GithubIssueEvent createJiraRequest) {
+        logger.info("Started JIRA Creation Flow");
         return projectService.createJira(createJiraRequest);
     }
 
