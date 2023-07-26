@@ -1,5 +1,6 @@
 package com.gitcolab.dao;
 
+import com.gitcolab.dto.UserDTO;
 import com.gitcolab.entity.Project;
 import com.gitcolab.utilities.ProjectRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -43,6 +46,32 @@ public class JDBCProjectDAO implements ProjectDAO {
 
     @Override
     public void delete(long id) {
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllProjects(Long id) {
+        List<Map<String, Object>> projects = jdbcTemplate.queryForList("select * from Project p join Contributors c on c.projectId = p.id where c.userId=?",new Object[]{id});
+        return projects;
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllContributors(int id) {
+        List<Map<String, Object>> projects = jdbcTemplate.queryForList( "select * from User u join Contributors c on u.id = c.userId where c.projectId = ?",new Object[]{id});
+        return projects;
+    }
+
+    @Override
+    public int addContributor(int userId, int projectId) {
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(userId);
+        return namedParameterJdbcTemplate
+                .update("INSERT INTO Contributors (`userId`,`projectId`) VALUES (" + userId + "," + projectId + ")"
+                        ,namedParameters);
+    }
+
+    @Override
+    public Optional<Project> getProjectByRepositoryName(String repositoryName) {
+        Project project=jdbcTemplate.queryForObject("select * from Project p where p.repositoryName=?",new Object[]{repositoryName}, new ProjectRowMapper());
+        return Optional.of(project);
     }
 
     @Override

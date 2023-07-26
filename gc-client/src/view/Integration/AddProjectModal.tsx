@@ -3,6 +3,8 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../redux/userSlice';
 import { createProject } from '../../services/ProjectService';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface AddProjectModalProps {
     projectDetails: ProjectDetails;
@@ -25,6 +27,7 @@ const AdddProjectModal: React.FC<AddProjectModalProps> = ({
     const [invalid, setInvalid] = useState(false);
     const userDataStore = useSelector(selectUser);
     const [errorMsg, setErrorMsg] = useState('');
+    const notify = () => toast.success("Project created successfully!");
 
     const handRepositoryNameChange = (e: any) => {
         setRepositoryName(e.target.value);
@@ -41,7 +44,7 @@ const AdddProjectModal: React.FC<AddProjectModalProps> = ({
     const handleSubmit = async (event: any) => {
         const form = event.currentTarget;        
         event.preventDefault();
-        if (form.checkValidity() === true) {
+        if (form.checkValidity() === true && repositoryName.indexOf(" ") < 0) {
             const projectData = {
                 email: userDataStore.email,
                 githubToken: userDataStore.githubToken,
@@ -54,13 +57,12 @@ const AdddProjectModal: React.FC<AddProjectModalProps> = ({
                 const response = await createProject(projectData, userDataStore.token);
                 if(response?.data) {
                     if(response?.status === 200) {
-                        // TODO: call toaster message
                         handleClose();
+                        notify();
                     } else {
                         setErrorMsg("Something went wrong!");
                     }                    
                 } else {
-                    console.log("ERROR===>", JSON.stringify(response));
                     let message: string = response?.response?.data.message;
                     setErrorMsg(message);
                 }            
@@ -68,6 +70,7 @@ const AdddProjectModal: React.FC<AddProjectModalProps> = ({
         } else {
             event.stopPropagation();
             setInvalid(true);
+            setErrorMsg("Invalid Repository Name!");
         }
     };
 

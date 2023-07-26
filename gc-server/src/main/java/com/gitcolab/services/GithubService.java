@@ -136,6 +136,28 @@ public class GithubService {
         }
     }
 
+    public GHUser getPublicUser(String username, String token) {
+        try {
+            GitHub mySelf = getGithubUserByToken(token);
+            return mySelf.getUser(username);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public boolean addCollaborator(String repositoryName, String username, String token) {
+        try {
+            GHRepository ghRepository = getRepositoryByName(repositoryName, token);
+            GHUser ghUser = getPublicUser(username, token);
+            Collection<GHUser> users = new ArrayList<>();
+            users.add(ghUser);
+            ghRepository.addCollaborators(users);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean generateWebHook(String repositoryName, String token) {
         try {
             GitHub github = new GitHubBuilder().withOAuthToken(token).build();

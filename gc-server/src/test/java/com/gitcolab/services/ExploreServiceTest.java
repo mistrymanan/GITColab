@@ -10,7 +10,6 @@ public class ExploreServiceTest {
 
     @Mock
     private ExploreService exploreService;
-
     public void testLoadUserByUsername() {
         String username = "sampleUsername";
 

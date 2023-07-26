@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Button, Container } from "react-bootstrap";
+import { useEffect, useMemo, useState } from "react";
+import { Badge, Button, Container } from "react-bootstrap";
 import { MDBDataTableV5 } from 'mdbreact';
 import AdddProjectModal from "./AddProjectModal";
 import { useNavigate } from "react-router";
@@ -11,7 +11,8 @@ import {
 } from "../../credentials";
 import { useDispatch, useSelector } from "react-redux";
 import { login, selectUser } from "../../redux/userSlice";
-import {getAtlassianAccessToken, getGithubAccessToken} from "../../services/AuthService";
+import { getAtlassianAccessToken, getGithubAccessToken } from "../../services/AuthService";
+import { getProjectList } from "../../services/ProjectService";
 
 const Integration = () => {
     const [githubAuthenticated, setGithubAuthenticated] = useState("");
@@ -23,23 +24,20 @@ const Integration = () => {
     const dispatch = useDispatch();
     const userDataStore = useSelector(selectUser);
     const atlassianURL = ATLASSIAN_URL;
-    const atlassianClientId= ATLASSIAN_CLIENT_ID;
+    const atlassianClientId = ATLASSIAN_CLIENT_ID;
+    const [projectList, setProjectList] = useState([]);
 
     const handleGithubLogin = () => {
         window.location.assign(`https://github.com/login/oauth/authorize?client_id=${clientId}&scope=${scope}`);
     }
     const handleAtlassianLogin = () => {
         window.location.assign(atlassianURL);
-        console.log("--"+window.location.href);
     }
 
     useEffect(() => {
         const url = new URL(window.location.href);
-        console.log("URL->"+url);
         const authenticationCode = url.search.replace("?code=", "");
-        console.log("githubcode->"+authenticationCode);
-        if (authenticationCode !== "" && authenticationCode.length<=100 && githubAuthenticated === "") {
-            console.log("TOKEN==G==", githubAuthenticated);
+        if (authenticationCode !== "" && authenticationCode.length <= 100 && githubAuthenticated === "") {
             const fetchData = async () => {
                 const data = {
                     "email": userDataStore.email,
@@ -62,12 +60,12 @@ const Integration = () => {
             fetchData();
             navigate('/integration');
         }
-        else if(authenticationCode.length>100 && atlassianAuthenticated===''){
+        else if (authenticationCode.length > 100 && atlassianAuthenticated === '') {
             const fetchData = async () => {
                 const data = {
-                    "grant_type":"authorization_code",
-                    "client_id":atlassianClientId,
-                    "redirect_uri":"http://localhost:3000/integration",
+                    "grant_type": "authorization_code",
+                    "client_id": atlassianClientId,
+                    "redirect_uri": "http://localhost:3000/integration",
                     "code": authenticationCode
                 };
                 const response = await getAtlassianAccessToken(data, userDataStore.token);
@@ -96,26 +94,45 @@ const Integration = () => {
         setOpenAddProjectModal(true);
     }
 
-    const columns = [
-        {
-            label: 'Project Name',
-            field: 'projectName',
-        }
-    ]
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const handleClick = (id: any) => {
         navigate(`/integration/${id}`);
     }
 
-    const rows: any[] = [
-        { projectName: "Gitcolab", clickEvent: () => handleClick(1) },
-        { projectName: "Text Classification", clickEvent: () => handleClick(2) },
-        { projectName: "Module Federation", clickEvent: () => handleClick(3) },
+    const columns = [
+        {
+            label: 'Project Name',
+            field: 'projectName',
+        },
+        {
+            label: "Role",
+            field: 'projectRole',
+        }
+
     ]
+
+    const rows = useMemo(()=>{
+        console.log("DATA===>", projectList);
+        return projectList.map((item: any)=>{
+            return{ projectName: item.repositoryName, projectRole: <>{item.userId === userDataStore.id ? (<Badge bg="info">Owner</Badge>) : (<Badge bg="primary">Contributor</Badge>)}</>, clickEvent: () => handleClick(item.id) }
+        })
+    },[handleClick, projectList, userDataStore.id])
+
+    useEffect(() => {
+        async function fetchProjectData() {
+            let response = await getProjectList(userDataStore.token);
+            if (response?.status === 200) {
+                setProjectList(response?.data);
+               
+            }
+        }
+        fetchProjectData()
+
+    }, [userDataStore.token])
 
     return (
         <>
-            {( userDataStore.githubToken && userDataStore.atlassianToken ) ? (
+            {(userDataStore.githubToken && userDataStore.atlassianToken) ? (
                 <Container className="mt-3">
                     <div className="d-flex flex-row my-2 justify-content-between py-3">
                         <h1>Projects</h1>
