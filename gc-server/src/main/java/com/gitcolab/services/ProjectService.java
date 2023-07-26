@@ -69,7 +69,7 @@ public class ProjectService {
             ResponseEntity<?> projectResponse=atlassianService.createAtlassianProject(projectCreationRequest);
             if(projectResponse.getStatusCode()== HttpStatus.CREATED){
                 try {
-                    ProjectResponse projectResp= ProjectResponse.fromJson(projectResponse.getBody().toString());
+                    ProjectResponse projectResp = ProjectResponse.fromJson(projectResponse.getBody().toString());
                     atlassianProjectId=projectResp.getId();
                 } catch (IOException e) {
                     logger.error(e.getMessage());

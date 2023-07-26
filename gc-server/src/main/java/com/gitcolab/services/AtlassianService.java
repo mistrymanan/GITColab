@@ -108,13 +108,12 @@ public class AtlassianService {
             Optional<MySelfResponse> mySelfResponse=getUserDetails(bearerToken,accessibleResource.get().getId());
             logger.info("MySelfResponse->"+accessibleResource);
             if(!mySelfResponse.isEmpty()){
-                List<IssueType> issueTypes=atlassianServiceClient.getIssues(accessibleResource.get().getId(),"10010",bearerToken);
+                List<IssueType> issueTypes=atlassianServiceClient.getIssues(accessibleResource.get().getId(),projectId,bearerToken);
                 CreateIssueRequest createIssueRequest = new CreateIssueRequest(githubIssueEvent,issueTypes,projectId,mySelfResponse.get().getAccountId());
                 logger.info("CreateIssueRequest->"+createIssueRequest);
                 ResponseEntity<?> response = atlassianServiceClient.createIssueRequest(accessibleResource.get().getId(),bearerToken,createIssueRequest);
                 logger.info("Response From atlassianServiceClient!"+response);
                 return response;
-//                return atlassianServiceClient.createIssueRequest(accessibleResource.get().getId(),bearerToken,createIssueRequest);
             }
         }
         return ResponseEntity.badRequest().body(new MessageResponse("Something went wrong while creating JIRA!"));
