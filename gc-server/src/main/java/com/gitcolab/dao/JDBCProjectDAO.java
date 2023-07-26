@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -78,5 +79,24 @@ public class JDBCProjectDAO implements ProjectDAO {
     public Optional<Project> getProjectByRepositoryNameAndOwner(String repositoryName, String repositoryOwner) {
         Project project=jdbcTemplate.queryForObject("select * from Project p where p.repositoryName=? and p.repositoryOwner=?",new Object[]{repositoryName,repositoryOwner}, new ProjectRowMapper());
         return Optional.of(project);
+    }
+
+    @Override
+    public List<Map<String, Object>> getProjectContributorMap() {
+        List<Map<String, Object>> projectContributorMap = jdbcTemplate.queryForList(
+                "SELECT p.id as projectId, p.userId as repositoryOwnerId, \n" +
+                "p.repositoryName, p.repositoryOwner, c.userId, \n" +
+                "u.username, u.email FROM Project p\n" +
+                "JOIN Contributors c\n" +
+                "ON p.id = c.projectId\n" +
+                "JOIN User u\n" +
+                "ON u.id = c.userId;\n");
+        return projectContributorMap;
+    }
+
+    @Override
+    public String getGithubTokenByUserId(Long id) {
+        String token = jdbcTemplate.queryForObject("SELECT token FROM ToolTokenRegistry WHERE userId = ? AND type = \"GITHUB\";", String.class, id);
+        return token;
     }
 }

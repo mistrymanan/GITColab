@@ -188,4 +188,46 @@ public class GithubService {
             return ResponseEntity.badRequest().body(new MessageResponse("Repository name is empty."));
         return null;
     }
+
+    public List<RepositoryCommits> topCommittedRepositories(GHUser ghUser, int topCount) {
+        try {
+            List<GHRepository> repositories = ghUser.listRepositories(30).toList();
+
+            List<RepositoryCommits> commitsList = new ArrayList<>();
+            for (GHRepository repo : repositories) {
+                GHCommitQueryBuilder commitQueryBuilder = repo.queryCommits().author(ghUser.getLogin());
+                try {
+                    PagedIterable<GHCommit> list = commitQueryBuilder.list();
+                    commitsList.add(new RepositoryCommits(repo.getName(), list.toList().size()));
+                } catch (Exception e){
+                    commitsList.add(new RepositoryCommits(repo.getName(), 0));
+                }
+            }
+            Collections.sort(commitsList, Comparator.comparingInt(RepositoryCommits::getCommits).reversed());
+
+            List<RepositoryCommits> topRepositories = commitsList.subList(0, Math.min(commitsList.size(), topCount));
+            return topRepositories;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static class RepositoryCommits {
+        private final String repositoryName;
+        private final int commits;
+
+        public RepositoryCommits(String repositoryName, int commits) {
+            this.repositoryName = repositoryName;
+            this.commits = commits;
+        }
+
+        public String getRepositoryName() {
+            return repositoryName;
+        }
+
+        public int getCommits() {
+            return commits;
+        }
+    }
+
 }

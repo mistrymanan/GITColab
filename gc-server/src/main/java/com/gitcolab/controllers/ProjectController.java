@@ -63,4 +63,15 @@ public class ProjectController {
     public ResponseEntity<?> addContributor(@Valid @RequestBody ContributorRequest contributorRequest) {
         return projectService.addContributor(contributorRequest);
     }
+
+    @GetMapping("/explore/{level}")
+    public ResponseEntity<?> getProjectContributorMap(@PathVariable("level") int level) {
+        return projectService.getProjectContributorMap(level);
+    }
+
+    @GetMapping("/dashboard")
+    public ResponseEntity<?> getDashboardData(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return projectService.getDashboardData(userDetails.getId());
+    }
+
 }

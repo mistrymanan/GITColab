@@ -69,16 +69,20 @@ const Integration = () => {
                     "code": authenticationCode
                 };
                 const response = await getAtlassianAccessToken(data, userDataStore.token);
+                console.log("From line 72");
+                console.log(response);
+                console.log(response.data);
+                console.log("Done");
                 if (response?.data) {
                     const storeObj = {
                         ...userDataStore,
-                        atlassianToken: response.data.access_token
+                        atlassianToken: response?.data?.body?.access_token
                     };
                     dispatch(
                         login(storeObj)
                     )
                 }
-                setAtlassianAuthenticated(response.data.access_token);
+                setAtlassianAuthenticated(response?.data?.body?.access_token);
             }
 
             fetchData();

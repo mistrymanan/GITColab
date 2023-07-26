@@ -5,7 +5,6 @@ import com.gitcolab.entity.RefreshToken;
 import com.gitcolab.entity.User;
 import org.springframework.stereotype.Repository;
 
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +18,8 @@ public interface ProjectRepository {
     List<Map<String, Object>> getAllProject(Long id);
     List<Map<String, Object>> getAllContributors(int projectId);
     int addContributor(int userId, int projectId);
+    List<Map<String, Object>> getProjectContributorMap();
+    String getGithubTokenByUserId(Long id);
     boolean isJiraBoardExist(String jiraBoardName,String userId);
 
     Optional<Project> getProjectByRepositoryNameAndOwner(String repositoryName,String repositoryOwner);

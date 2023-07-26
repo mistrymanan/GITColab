@@ -7,7 +7,6 @@ import com.gitcolab.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 import java.util.List;
 import java.util.Map;
@@ -50,6 +49,16 @@ public class ProjectRepositoryImplementation implements ProjectRepository {
     @Override
     public Optional<Project> findByRepositoryName(String repositoryName) {
         return projectDAO.getProjectByRepositoryName(repositoryName);
+    }
+
+    @Override
+    public List<Map<String, Object>> getProjectContributorMap() {
+        return projectDAO.getProjectContributorMap();
+    }
+
+    @Override
+    public String getGithubTokenByUserId(Long id) {
+        return projectDAO.getGithubTokenByUserId(id);
     }
 
     @Override

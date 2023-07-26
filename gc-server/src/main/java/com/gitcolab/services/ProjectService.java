@@ -16,6 +16,7 @@ import com.gitcolab.repositories.ToolTokenManagerRepository;
 import com.gitcolab.utilities.EmailSender;
 import com.gitcolab.utilities.HelperUtils;
 import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +25,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.Optional;
 
 @Service
@@ -172,5 +176,53 @@ public class ProjectService {
             atlassianService.createIssue(githubIssueEvent,project.get().getAtlassianProjectId(),atlassianToken);
         }
         return null;
+    }
+
+    public ResponseEntity<?> getProjectContributorMap(int level) {
+        if(level <= 0)
+            return ResponseEntity.ok().body(new MessageResponse("Invalid level"));
+        List<Map<String, Object>> projectContributorMap = projectRepository.getProjectContributorMap();
+        Map<Integer, Set<Integer>> adjacencyList = generateAdjacencyList(projectContributorMap);
+        // TODO: Handling Explore by depth
+        return ResponseEntity.ok().body(projectRepository.getProjectContributorMap());
+    }
+
+    private Map<Integer, Set<Integer>> generateAdjacencyList(List<Map<String, Object>> projectContributorMap) {
+        Map<Integer, Set<Integer>> adjacencyList = new HashMap<>();
+        for (Map<String, Object> project : projectContributorMap) {
+            int projectId = (int) project.get("projectId");
+            int contributorId = (int) project.get("userId");
+
+            if (!adjacencyList.containsKey(projectId)) {
+                adjacencyList.put(projectId, new HashSet<>());
+            }
+            adjacencyList.get(projectId).add(contributorId);
+        }
+        return adjacencyList;
+    }
+
+    public ResponseEntity<?> getDashboardData(long userId) {
+        Map<String, Object> dashboardData = new HashMap<>();
+        List<Map<String, Object>> allProjects = projectRepository.getAllProject(userId);
+        AtomicInteger totalProjectOwnership = new AtomicInteger();
+        AtomicInteger totalProjectContributions = new AtomicInteger();
+        allProjects.stream().forEach(stringObjectMap -> {
+            AtomicInteger userId1 = new AtomicInteger(((int)stringObjectMap.get("userId") == (int) userId) ?
+                    totalProjectOwnership.getAndIncrement() : totalProjectContributions.getAndIncrement());
+        });
+        dashboardData.put("totalProjectOwnership", totalProjectOwnership);
+        dashboardData.put("totalProjectContributions", totalProjectContributions);
+        String githubAuthToken = projectRepository.getGithubTokenByUserId(userId);
+        GitHub gitHub = githubService.getGithubUserByToken(githubAuthToken);
+        try {
+            dashboardData.put("numberOfFollowers", gitHub.getMyself().getFollowersCount());
+            dashboardData.put("totalRepositories", gitHub.getMyself().getPublicRepoCount());
+            dashboardData.put("topCommittedRepositories", githubService.topCommittedRepositories(gitHub.getMyself(), 10));
+        } catch (Exception e) {
+            dashboardData.put("numberOfFollowers", 0);
+            dashboardData.put("totalRepositories", 0);
+            dashboardData.put("topCommittedRepositories", "");
+        }
+        return ResponseEntity.ok().body(dashboardData);
     }
 }
