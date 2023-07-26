@@ -16,6 +16,8 @@ import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.sql.ResultSet;
 import java.time.Instant;
 import java.util.*;
 
@@ -125,5 +127,28 @@ public class ProjectService {
                 "Welcome to GitColab",
                 String.valueOf(message));
         return ResponseEntity.ok().body(new MessageResponse("Contributor added successfully"));
+    }
+
+    public ResponseEntity<?> getProjectContributorMap(int level) {
+        if(level <= 0)
+            return ResponseEntity.ok().body(new MessageResponse("Invalid level"));
+        List<Map<String, Object>> projectContributorMap = projectRepository.getProjectContributorMap();
+        Map<Integer, Set<Integer>> adjacencyList = generateAdjacencyList(projectContributorMap);
+        // TODO: Handling Explore by depth
+        return ResponseEntity.ok().body(projectRepository.getProjectContributorMap());
+    }
+
+    private Map<Integer, Set<Integer>> generateAdjacencyList(List<Map<String, Object>> projectContributorMap) {
+        Map<Integer, Set<Integer>> adjacencyList = new HashMap<>();
+        for (Map<String, Object> project : projectContributorMap) {
+            int projectId = (int) project.get("projectId");
+            int contributorId = (int) project.get("userId");
+
+            if (!adjacencyList.containsKey(projectId)) {
+                adjacencyList.put(projectId, new HashSet<>());
+            }
+            adjacencyList.get(projectId).add(contributorId);
+        }
+        return adjacencyList;
     }
 }

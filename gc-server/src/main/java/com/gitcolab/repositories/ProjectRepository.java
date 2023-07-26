@@ -18,4 +18,5 @@ public interface ProjectRepository {
     List<Map<String, Object>> getAllProject(Long id);
     List<Map<String, Object>> getAllContributors(int projectId);
     int addContributor(int userId, int projectId);
+    List<Map<String, Object>> getProjectContributorMap();
 }
