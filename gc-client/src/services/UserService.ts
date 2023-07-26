@@ -1,4 +1,3 @@
-import { get } from "http";
 import { getData, postData, putData } from "./utils";
 
 export async function loginUser(userData: any) {

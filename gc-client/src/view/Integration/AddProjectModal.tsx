@@ -44,7 +44,7 @@ const AdddProjectModal: React.FC<AddProjectModalProps> = ({
     const handleSubmit = async (event: any) => {
         const form = event.currentTarget;        
         event.preventDefault();
-        if (form.checkValidity() === true) {
+        if (form.checkValidity() === true && repositoryName.indexOf(" ") < 0) {
             const projectData = {
                 email: userDataStore.email,
                 githubToken: userDataStore.githubToken,
@@ -63,7 +63,6 @@ const AdddProjectModal: React.FC<AddProjectModalProps> = ({
                         setErrorMsg("Something went wrong!");
                     }                    
                 } else {
-                    console.log("ERROR===>", JSON.stringify(response));
                     let message: string = response?.response?.data.message;
                     setErrorMsg(message);
                 }            
@@ -71,6 +70,7 @@ const AdddProjectModal: React.FC<AddProjectModalProps> = ({
         } else {
             event.stopPropagation();
             setInvalid(true);
+            setErrorMsg("Invalid Repository Name!");
         }
     };
 

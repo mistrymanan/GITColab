@@ -1,21 +1,14 @@
-import { useState } from "react";
 import { Container, Dropdown } from "react-bootstrap";
 import CardComponent from "../../components/ui/Card";
 
 const Explore = () => {
-    const [showAddProjectFlow, setShowSearchProjectFlow] = useState(false);
-
-    const searchProjectFlowHandler = () => {
-        setShowSearchProjectFlow(true);
-    };
-
     return (
         <>
             <Container className="mt-3">
                 <div className="d-flex flex-row my-2 justify-content-between">
                     <h1 className='py-3'> Explore New Projects </h1>
 
-                    <Dropdown onClick={searchProjectFlowHandler}>
+                    <Dropdown>
                         <Dropdown.Toggle variant="dark" id="dropdown-basic">
                             Search Project
                         </Dropdown.Toggle>
