@@ -2,12 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Image } from 'react-bootstrap';
 import { FaLinkedin, FaGithub, FaCloud } from 'react-icons/fa';
 import ProfileEditModal from './ProfileEditModal/ProfileEditModal';
-import { store } from '../../store/store';
-import { getData } from '../../services/utils';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../redux/userSlice';
 import { getUserData } from '../../services/UserService';
-// import { selectUserData } from '../../redux/userSlice';
 
 
 interface UserProfileProps {
