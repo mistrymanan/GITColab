@@ -12,14 +12,16 @@ import com.gitcolab.repositories.ToolTokenManagerRepository;
 import com.gitcolab.utilities.EmailSender;
 import com.gitcolab.utilities.HelperUtils;
 import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.sql.ResultSet;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ProjectService {
@@ -150,5 +152,30 @@ public class ProjectService {
             adjacencyList.get(projectId).add(contributorId);
         }
         return adjacencyList;
+    }
+
+    public ResponseEntity<?> getDashboardData(long userId) {
+        Map<String, Object> dashboardData = new HashMap<>();
+        List<Map<String, Object>> allProjects = projectRepository.getAllProject(userId);
+        AtomicInteger totalProjectOwnership = new AtomicInteger();
+        AtomicInteger totalProjectContributions = new AtomicInteger();
+        allProjects.stream().forEach(stringObjectMap -> {
+            AtomicInteger userId1 = new AtomicInteger(((int)stringObjectMap.get("userId") == (int) userId) ?
+                    totalProjectOwnership.getAndIncrement() : totalProjectContributions.getAndIncrement());
+        });
+        dashboardData.put("totalProjectOwnership", totalProjectOwnership);
+        dashboardData.put("totalProjectContributions", totalProjectContributions);
+        String githubAuthToken = projectRepository.getGithubTokenByUserId(userId);
+        GitHub gitHub = githubService.getGithubUserByToken(githubAuthToken);
+        try {
+            dashboardData.put("numberOfFollowers", gitHub.getMyself().getFollowersCount());
+            dashboardData.put("totalRepositories", gitHub.getMyself().getPublicRepoCount());
+            dashboardData.put("topCommittedRepositories", githubService.topCommittedRepositories(gitHub.getMyself(), 10));
+        } catch (Exception e) {
+            dashboardData.put("numberOfFollowers", 0);
+            dashboardData.put("totalRepositories", 0);
+            dashboardData.put("topCommittedRepositories", "");
+        }
+        return ResponseEntity.ok().body(dashboardData);
     }
 }

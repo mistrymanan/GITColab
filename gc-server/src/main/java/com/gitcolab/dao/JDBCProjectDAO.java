@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -85,5 +86,11 @@ public class JDBCProjectDAO implements ProjectDAO {
                 "JOIN User u\n" +
                 "ON u.id = c.userId;\n");
         return projectContributorMap;
+    }
+
+    @Override
+    public String getGithubTokenByUserId(Long id) {
+        String token = jdbcTemplate.queryForObject("SELECT token FROM ToolTokenRegistry WHERE userId = ? AND type = \"GITHUB\";", String.class, id);
+        return token;
     }
 }

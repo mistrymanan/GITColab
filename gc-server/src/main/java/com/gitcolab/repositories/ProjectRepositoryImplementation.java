@@ -54,4 +54,9 @@ public class ProjectRepositoryImplementation implements ProjectRepository {
     public List<Map<String, Object>> getProjectContributorMap() {
         return projectDAO.getProjectContributorMap();
     }
+
+    @Override
+    public String getGithubTokenByUserId(Long id) {
+        return projectDAO.getGithubTokenByUserId(id);
+    }
 }

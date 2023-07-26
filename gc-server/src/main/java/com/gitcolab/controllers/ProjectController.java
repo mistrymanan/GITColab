@@ -63,4 +63,9 @@ public class ProjectController {
         return projectService.getProjectContributorMap(level);
     }
 
+    @GetMapping("/dashboard")
+    public ResponseEntity<?> getDashboardData(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return projectService.getDashboardData(userDetails.getId());
+    }
+
 }
