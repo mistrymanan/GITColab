@@ -9,7 +9,6 @@ import com.gitcolab.repositories.UserRepository;
 import com.gitcolab.security.jwt.JwtUtils;
 import com.gitcolab.utilities.EmailSender;
 import com.gitcolab.utilities.HelperUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,8 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -172,6 +169,18 @@ public class UserService {
 
         UserDTO userDTO = new UserDTO(user.get());
         return  ResponseEntity.ok(userDTO);
+    }
+
+    public UserDTO getUser(String username) {
+        if(!HelperUtils.isValidString(username))
+            return null;
+
+        Optional<User> user = userRepository.findByUsername(username);
+        if(!user.isPresent())
+            return null;
+
+        UserDTO userDTO = new UserDTO(user.get());
+        return userDTO;
     }
 
     public ResponseEntity<?> updateUserProfile(UpdateUserProfileRequest updateUserProfileRequest) {

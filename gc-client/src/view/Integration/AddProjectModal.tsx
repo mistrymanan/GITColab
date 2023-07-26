@@ -3,6 +3,8 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../redux/userSlice';
 import { createProject } from '../../services/ProjectService';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface AddProjectModalProps {
     projectDetails: ProjectDetails;
@@ -25,6 +27,7 @@ const AdddProjectModal: React.FC<AddProjectModalProps> = ({
     const [invalid, setInvalid] = useState(false);
     const userDataStore = useSelector(selectUser);
     const [errorMsg, setErrorMsg] = useState('');
+    const notify = () => toast.success("Project created successfully!");
 
     const handRepositoryNameChange = (e: any) => {
         setRepositoryName(e.target.value);
@@ -54,8 +57,8 @@ const AdddProjectModal: React.FC<AddProjectModalProps> = ({
                 const response = await createProject(projectData, userDataStore.token);
                 if(response?.data) {
                     if(response?.status === 200) {
-                        // TODO: call toaster message
                         handleClose();
+                        notify();
                     } else {
                         setErrorMsg("Something went wrong!");
                     }                    

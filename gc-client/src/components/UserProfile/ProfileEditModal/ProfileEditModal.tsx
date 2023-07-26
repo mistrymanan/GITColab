@@ -30,7 +30,6 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
 }) => {
   const [formData, setFormData] = useState<UserProfileData>(userProfile);
   const [errorMsg, setErrorMsg] = useState('');
-  const navigate = useNavigate();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;

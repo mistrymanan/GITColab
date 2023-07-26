@@ -1,11 +1,17 @@
 import { MDBDataTableV5 } from "mdbreact";
-import { useState } from "react";
-import { Button, Container, Table } from "react-bootstrap"
+import { useEffect, useMemo, useState } from "react";
+import { Badge, Button, Container, Table } from "react-bootstrap"
 import AddContributorModal from "./AddContributorModal";
+import { getProject, getProjectContributors } from "../../services/ProjectService";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/userSlice";
 
 const ProjectDetails = () => {
-
     const [openAddContributorModal, setAddContributorModal] = useState(false);
+    const userDataStore = useSelector(selectUser);
+    const [projectDetails, setProjectDetails] = useState({} as any);
+    const [contributorsList, setContributorsList] = useState([]);
+    const projectId = window.location.pathname.split("/").pop();
 
     const handleModalClose = () => {
         setAddContributorModal(false);
@@ -15,16 +21,35 @@ const ProjectDetails = () => {
         setAddContributorModal(true);
     }
 
+    const rows = useMemo(() => {
+        return contributorsList.map((item: any) => {
+            return { contributorName: item.username, contributorRole: <>{projectDetails.userId === item.userId ? (<Badge bg="info">Owner</Badge>) : (<Badge bg="primary">Contributor</Badge>)}</> }
+        })
+    }, [contributorsList, userDataStore.id])
+
+    useEffect(() => {
+        async function fetchProjectData() {
+            let response = await getProject(projectId, userDataStore.token);
+            if (response?.status === 200) {
+                setProjectDetails(response?.data);
+            }
+            let contributorResponse = await getProjectContributors(projectId, userDataStore.token);
+            if (contributorResponse?.status === 200) {
+                setContributorsList(contributorResponse?.data?.body);
+            }
+        }
+        fetchProjectData()
+    }, [userDataStore.token])
+
     const columns = [
         {
-            label: 'Project Name',
-            field: 'projectName',
+            label: 'Contributor Name',
+            field: 'contributorName',
+        },
+        {
+            label: "Role",
+            field: 'contributorRole',
         }
-    ]
-    const rows: any[] = [
-        { projectName: "Gitcolab" },
-        { projectName: "Text Classification" },
-        { projectName: "Module Federation" },
     ]
     return (
         <>
@@ -36,19 +61,25 @@ const ProjectDetails = () => {
                             <tbody>
                                 <tr>
                                     <td>Repository:</td>
-                                    <td><a target="_blank" href="https://www.github.com" rel="noreferrer">{'Gitcolab'} <i className="fa-solid fa-up-right-from-square"></i></a></td>
+                                    <td><a target="_blank" href={`https://www.github.com/${projectDetails.repositoryOwner}/${projectDetails.repositoryName}`} rel="noreferrer">{'Gitcolab'} <i className="fa-solid fa-up-right-from-square"></i></a></td>
                                 </tr>
                                 <tr>
                                     <td>JIRA Board:</td>
-                                    <td><a target="_blank" href="https://www.github.com" rel="noreferrer">{'Gitcolab JIRA'} <i className="fa-solid fa-up-right-from-square"></i></a></td>
+                                    <td>
+                                        {projectDetails.jiraBoardName !== "" ? (
+                                            <a target="_blank" href="https://www.github.com" rel="noreferrer">{'Gitcolab JIRA'} <i className="fa-solid fa-up-right-from-square"></i></a>
+                                        ) : (
+                                            <>JIRA BOARD NOT AVAILABLE</>
+                                        )}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Owner:</td>
-                                    <td>{'keyurkhant'}</td>
+                                    <td>{projectDetails.repositoryOwner}</td>
                                 </tr>
                                 <tr>
                                     <td>Total Participants:</td>
-                                    <td>{'23'}</td>
+                                    <td>{contributorsList.length}</td>
                                 </tr>
                             </tbody>
                         </Table>
@@ -63,7 +94,7 @@ const ProjectDetails = () => {
                 </div>
                 {openAddContributorModal && (
                     <AddContributorModal
-                        handleClose={handleModalClose} contributorDetails={{ username: "" }} />
+                        handleClose={handleModalClose} contributorDetails={{ repositoryName: projectDetails.repositoryName }} />
                 )}
             </Container>
         </>
