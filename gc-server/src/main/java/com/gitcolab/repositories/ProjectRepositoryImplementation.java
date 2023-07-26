@@ -49,4 +49,9 @@ public class ProjectRepositoryImplementation implements ProjectRepository {
     public Optional<Project> findByRepositoryName(String repositoryName) {
         return projectDAO.getProjectByRepositoryName(repositoryName);
     }
+
+    @Override
+    public List<Map<String, Object>> getProjectContributorMap() {
+        return projectDAO.getProjectContributorMap();
+    }
 }

@@ -1,5 +1,4 @@
-import { Container } from "react-bootstrap";
-import DashboardCard from "../../components/ui/Dashboard/Card";
+import { Card, CardGroup, Col, Container, Row } from "react-bootstrap";
 
 const Dashboard = () => {
     return (
@@ -8,15 +7,57 @@ const Dashboard = () => {
                 <div className="d-flex flex-row justify-content-between py-3">
                     <h1>Dashboard</h1>
                 </div>
-                <div className="d-flex flex-wrap">
-                    <DashboardCard title="Total PR" value="25"/>
-                    <DashboardCard title="Total PR" value="25"/>
-                    <DashboardCard title="Total PR" value="25"/>
-                </div>
-                <div>
-                    <h1>Chart1</h1>
-                    <h1>Chart2</h1>
-                </div>
+                <Row>
+                    <Col>
+                        <Card className="mr-2">
+                            <Card.Body>
+                                <Card.Title>Total Users</Card.Title>
+                                <Card.Text>100</Card.Text>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>Total Projects</Card.Title>
+                                <Card.Text>50</Card.Text>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>Other System Detail</Card.Title>
+                                <Card.Text>Value</Card.Text>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>Another Detail</Card.Title>
+                                <Card.Text>Value</Card.Text>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
+
+                <Row className="mt-4">
+                    <Col>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>Chart 1</Card.Title>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>Chart 2</Card.Title>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
             </Container>
         </>
     )
