@@ -78,7 +78,7 @@ public class JDBCToolTokenManagerDAO implements ToolTokenManagerDAO {
         try {
             integration = jdbcTemplate
                     .queryForObject(
-                            "select * from ToolTokenRegistry i where i.userId = (select userId from Project p where p.repositoryOwner=?) and i.type=? order by 1 desc limit 1"
+                            "select * from ToolTokenRegistry i where i.userId = (select userId from Project p where p.repositoryOwner=? limit 1) and i.type=? order by 1 desc limit 1"
                             ,new Object[]{repositoryOwner,type.toString()}
                             , new IntegrationRowMapper());
         } catch (Exception e) {

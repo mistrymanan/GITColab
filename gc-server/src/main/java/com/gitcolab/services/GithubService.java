@@ -22,9 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class GithubService {
@@ -168,7 +166,11 @@ public class GithubService {
             Collection<GHEvent> events = new ArrayList<>();
             events.add(GHEvent.ISSUES);
 
-            repository.createWebHook(webhookURL, events);
+            HashMap<String,String> config=new HashMap<>();
+            config.put("url",webhookURL.toExternalForm());
+            config.put("content_type", "json");
+
+            repository.createHook("web", Collections.singletonMap("url", webhookURL.toExternalForm()), events, true);
             return true;
         } catch (Exception e) {
             return false;

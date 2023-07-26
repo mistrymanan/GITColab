@@ -66,6 +66,10 @@ public class AtlassianService {
     public Optional<AccessibleResource> getAccessibleResources(String bearerToken){
         List<AccessibleResource> accessibleResources=atlassianServiceClient.getAccessibleResources(bearerToken);
         if(!accessibleResources.isEmpty()){
+            int accessibleResourcesSize=accessibleResources.size();
+            if(accessibleResourcesSize>0){
+                return Optional.of(accessibleResources.get(accessibleResourcesSize-1));
+            }
             return Optional.of(accessibleResources.get(0));
         }
         return Optional.empty();
@@ -92,7 +96,6 @@ public class AtlassianService {
                                 ,projectCreationRequest.getRepositoryName());
             return atlassianServiceClient.createProject(cloudId,atlassianToken,projectCreateRequest);
             }
-
         }
         return ResponseEntity.badRequest().body(new MessageResponse("No Atlassian site found!"));
     }
@@ -129,7 +132,7 @@ public class AtlassianService {
         } else {
             keyword = words[0].toUpperCase().substring(0, Math.min(words[0].length(), 5));
         }
-
+        keyword = keyword.replaceAll("[-_]", "");
         String digits = generateRandomDigits(5);
 
         return keyword + digits;
