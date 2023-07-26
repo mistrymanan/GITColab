@@ -68,21 +68,4 @@ class UserRepositoryImplementationTest {
         verify(userDao, times(1)).existsByUsername(username);
     }
 
-    //UserRepositoryTest - uchenna
-    @Test
-    void updateProfile_ShouldReturnZero_WhenUpdated(){
-        // Arrange
-        User user = new User();
-        when(userDao.updateProfile(user)).thenReturn(0);
-
-        // Act
-        int returnVal = userRepository.updateProfile(user);
-
-        // Assert
-        assertEquals(0, returnVal);
-
-        //verify
-        verify(userDao, times(1)).updateProfile(user);
-    }
-
 }

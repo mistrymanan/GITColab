@@ -46,8 +46,4 @@ public class UserRepositoryImplementation implements UserRepository{
     @Override
     public Optional<User> getUserByEmail(String email) { return  userDao.getUserByEmail(email); }
 
-    //new method to eliminate confusion
-    @Override
-    public int updateProfile(User user) { return userDao.updateProfile(user); }
-
 }

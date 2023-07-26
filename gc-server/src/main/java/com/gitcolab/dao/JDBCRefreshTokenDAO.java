@@ -19,14 +19,14 @@ public class JDBCRefreshTokenDAO implements RefreshTokenDAO {
     JdbcTemplate jdbcTemplate;
     @Override
     public Optional get(long id) {
-        RefreshToken refreshToken=jdbcTemplate.queryForObject("select * from RefreshToken rt where rt.id=?",new Object[]{id}, new RefreshTokenRowMapper());
+        RefreshToken refreshToken=jdbcTemplate.queryForObject("select * from refreshTokens rt where rt.id=?",new Object[]{id}, new RefreshTokenRowMapper());
         return Optional.of(refreshToken);
     }
 
     @Override
     public int save(Object o) {
         RefreshToken refreshToken=(RefreshToken) o;
-        String sql = "INSERT INTO RefreshToken (id, userId, token, expiryDate) " +
+        String sql = "INSERT INTO refreshTokens (id, userId, token, expiryDate) " +
                 "VALUES (:id, :userId, :token, :expiryDate)";
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
@@ -44,19 +44,19 @@ public class JDBCRefreshTokenDAO implements RefreshTokenDAO {
 
     @Override
     public void delete(long id) {
-        String sql = "DELETE FROM RefreshToken WHERE id = :id";
+        String sql = "DELETE FROM refreshTokens WHERE id = :id";
         jdbcTemplate.update(sql,new Object[]{id});
     }
 
     @Override
     public Optional<RefreshToken> findByToken(String token) {
-        RefreshToken refreshToken=jdbcTemplate.queryForObject("select * from RefreshToken rt where rt.token=?",new Object[]{token}, new RefreshTokenRowMapper());
+        RefreshToken refreshToken=jdbcTemplate.queryForObject("select * from refreshTokens rt where rt.token=?",new Object[]{token}, new RefreshTokenRowMapper());
         return Optional.of(refreshToken);
     }
 
     @Override
     public void deleteByUser(User user) {
-        String sql = "DELETE FROM RefreshToken rt WHERE rt.userId = :id";
+        String sql = "DELETE FROM refreshTokens rt WHERE rt.userId = :id";
         jdbcTemplate.update(sql,new Object[]{user.getId()});
     }
 

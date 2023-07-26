@@ -7,11 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class IssueType {
+class IssueType {
     private String id;
-    private String name;
-
-    public IssueType(String id) {
-        this.id = id;
-    }
 }

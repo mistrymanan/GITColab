@@ -38,6 +38,20 @@ const Registration = () => {
         setErrorMsg("");
     };
 
+    // TODO: Need to add all validation for all the register field
+    // const fieldValidator = () => {
+    //     console.log("HERE in validator");
+    //     const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    //     if(username.length <= 4 || username.match(specialCharRegex)) {
+    //         setErrors(prevState => ({
+    //             ...prevState,
+    //             username: "Invalid username."
+    //         }));
+    //         return false;
+    //     }
+    //     return true;
+    // }
+
     const handleSubmit = async (event: any) => {
         const form = event.currentTarget;
         event.preventDefault();

@@ -3,14 +3,12 @@ package com.gitcolab.dro.atlassian;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.util.Objects;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class AccessibleResource {
     String id;
     String url;

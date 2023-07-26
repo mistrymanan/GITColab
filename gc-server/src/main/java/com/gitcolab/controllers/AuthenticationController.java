@@ -1,5 +1,6 @@
 package com.gitcolab.controllers;
 
+import com.fasterxml.jackson.core.PrettyPrinter;
 import com.gitcolab.dto.*;
 import com.gitcolab.services.UserService;
 import jakarta.validation.Valid;

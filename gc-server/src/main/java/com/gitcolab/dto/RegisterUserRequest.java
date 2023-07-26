@@ -28,15 +28,13 @@ public class RegisterUserRequest {
     @Size(min = 6, max = 40)
     private String password;
 
+    @NotBlank
     @Size(min=2,max=50)
     private String firstName;
-
+    @NotBlank
     @Size(min=2,max = 50)
     private String lastName;
 
-    public RegisterUserRequest(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
+    public RegisterUserRequest(String username, String email, String password, String uFname, String uLname, String abc123, String s) {
     }
 }

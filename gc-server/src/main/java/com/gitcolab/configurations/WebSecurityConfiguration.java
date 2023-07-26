@@ -3,8 +3,6 @@ package com.gitcolab.configurations;
 import com.gitcolab.security.jwt.AuthEntryPointJwt;
 import com.gitcolab.security.jwt.AuthTokenFilter;
 import com.gitcolab.services.UserDetailsServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class WebSecurityConfiguration {
-    Logger logger = LoggerFactory.getLogger(WebSecurityConfiguration.class);
     @Autowired
     UserDetailsServiceImpl userDetailsService;
     @Autowired
@@ -43,13 +40,8 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) {
-        try {
-            return authConfig.getAuthenticationManager();
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-        return null;
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
     @Bean
@@ -58,28 +50,21 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) {
-        try {
-            http.csrf(csrf -> csrf.disable())
-                    .cors(cors->cors.disable())
-                    .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-                    .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .authorizeHttpRequests(auth ->
-                            auth.requestMatchers("/api/auth/**").permitAll()
-                                    .requestMatchers("/api/auth/refreshtoken").permitAll()
-                                    .requestMatchers("/api/test/**").permitAll()
-                                    .requestMatchers("/api/**").permitAll()
-                                    .requestMatchers("/api/project/createJira").permitAll()
-                                    .anyRequest().authenticated()
-                    );
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth ->
+                        auth.requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/api/auth/refreshtoken").permitAll()
+                                .requestMatchers("/api/test/**").permitAll()
+                                .anyRequest().authenticated()
+                );
 
-            http.authenticationProvider(authenticationProvider());
+        http.authenticationProvider(authenticationProvider());
 
-            http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-            return http.build();
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-        return null;
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 }

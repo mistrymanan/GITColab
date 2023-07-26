@@ -30,23 +30,15 @@ const Login = () => {
         if (form.checkValidity() === true) {
             const data = { username: username, password: password };
             const response = await loginUser(data);
-            let userData;
+            let token;
             if (response?.data) {
-                userData = response.data;
+                token = response.data.token;
                 dispatch(
                     login({
-                        token: userData.token,
-                        email: userData.email,
-                        username: userData.username,
-                        id: userData.id,
-                        refreshToken: userData.refreshToken
+                        token: token
                     })
                 )
-                localStorage.setItem('token', userData.token);
-                localStorage.setItem('email', userData.email);
-                localStorage.setItem('username', userData.username);
-                localStorage.setItem('id', userData.id);
-                localStorage.setItem('refreshToken', userData.refreshToken);
+                localStorage.setItem('token', token);
                 navigate('/dashboard');
             } else {
                 event.stopPropagation();
