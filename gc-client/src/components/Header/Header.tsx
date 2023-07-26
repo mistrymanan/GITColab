@@ -12,10 +12,6 @@ const Header = () => {
     const handleSignOut = () => {
         dispatch(logout());
         localStorage.removeItem('token');
-        localStorage.removeItem('email');
-        localStorage.removeItem('username');
-        localStorage.removeItem('id');
-        localStorage.removeItem('refreshToken');
         navigate('/');
     }
 
@@ -24,8 +20,8 @@ const Header = () => {
             <Navbar bg="dark" variant="dark" expand="lg" >
                 <Container className=''>
 
-                    <LinkContainer to='/dashboard'>
-                        <Navbar.Brand >Github Colab</Navbar.Brand>
+                    <LinkContainer to='/'>
+                        <Navbar.Brand >Github Collab</Navbar.Brand>
                     </LinkContainer>
 
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -67,6 +63,7 @@ const Header = () => {
                                 </>
                             )}
                     </Navbar.Collapse>
+
                 </Container>
             </Navbar>
         </header>

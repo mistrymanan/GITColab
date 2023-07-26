@@ -36,7 +36,7 @@ build:client:
   stage: build
   script:
     - cd gc-client
-    - npm install --force
+    - npm install
     - npm run build
 
 test:client:
@@ -44,7 +44,7 @@ test:client:
   stage: test
   script:
     - cd gc-client
-    - npm install --force
+    - npm install
     - npm test
 
 deploy:

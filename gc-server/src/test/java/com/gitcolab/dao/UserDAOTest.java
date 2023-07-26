@@ -94,18 +94,4 @@ class UserDAOTest {
 
         verify(userDAO).existsByEmail(email);
     }
-
-
-    //Test to updateProfile via DAO. - Uchenna
-    @Test
-    void testUpdateProfile(){
-        String username = "user123";
-        when(userDAO.updateProfile(username)).thenReturn(0);
-
-        int result = userDAO.updateProfile(username);
-
-        assertEquals(0, result);
-
-        verify(userDAO).updateProfile(username);
-    }
 }

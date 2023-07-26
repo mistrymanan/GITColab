@@ -15,7 +15,4 @@ public interface UserRepository {
     Optional<User> findById(long id);
     int saveOtp(User user);
     Optional<User> getUserByEmail(String email);
-
-    //new method to eliminate confusion
-    int updateProfile(User user);
 }
