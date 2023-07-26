@@ -1,5 +1,6 @@
 package com.gitcolab.services;
 
+import com.gitcolab.dao.UserDAO;
 import com.gitcolab.dto.*;
 import com.gitcolab.entity.RefreshToken;
 import com.gitcolab.entity.User;
@@ -31,6 +32,9 @@ public class UserService {
     EmailSender emailSender;
 
     @Autowired
+    UserDAO userDAO;
+
+    @Autowired
     public UserService(AuthenticationManager authenticationManager, UserRepository userRepository, PasswordEncoder encoder, JwtUtils jwtUtils, RefreshTokenService refreshTokenService, EmailSender emailSender) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
@@ -40,7 +44,7 @@ public class UserService {
         this.emailSender = emailSender;
     }
 
-    public ResponseEntity<?> authenticateUser(LoginRequest loginRequest){
+    public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -67,7 +71,8 @@ public class UserService {
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
                         "Refresh token is not in database!"));
     }
-    public  ResponseEntity<?> registerUser(RegisterUserRequest registerUserRequest) {
+
+    public ResponseEntity<?> registerUser(RegisterUserRequest registerUserRequest) {
         if (userRepository.existsByUsername(registerUserRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
         }
@@ -77,12 +82,16 @@ public class UserService {
         }
 
         User user = new User(registerUserRequest.getUsername()
-                ,registerUserRequest.getEmail()
-                ,encoder.encode(registerUserRequest.getPassword())
-                ,registerUserRequest.getFirstName()
-                ,registerUserRequest.getLastName());
+                , registerUserRequest.getEmail()
+                , encoder.encode(registerUserRequest.getPassword())
+                , registerUserRequest.getFirstName()
+                , registerUserRequest.getLastName());
 
         userRepository.save(user);
+
+        boolean sendEmail = emailSender.sendEmail(registerUserRequest.getEmail(),
+                "Welcome to GitColab",
+                "Hello " + user.getFirstName() + ",\n\nWelcome to GitColab! Happy integrating things! \n\nTeam GitColab!");
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
@@ -93,7 +102,7 @@ public class UserService {
         }
 
         Optional<User> user = userRepository.getUserByEmail(sendOTPRequest.getEmail());
-        if(!user.isPresent()) {
+        if (!user.isPresent()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Something went wrong!"));
         }
         String otpExpiry = String.valueOf(Instant.now().plusSeconds(300).getEpochSecond());
@@ -106,7 +115,7 @@ public class UserService {
                 "Hello " + user.get().getFirstName() + ",\n\nVerification Code for reset password request: " + otp + "\n\nThank you,\nGitColab");
 
         userRepository.update(user.get());
-        if(!sendEmail) {
+        if (!sendEmail) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Something went wrong!"));
         }
         return ResponseEntity.ok(new MessageResponse("Verification Code sent successfully!"));
@@ -117,14 +126,15 @@ public class UserService {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: User is not exist in system!"));
         }
         Optional<User> user = userRepository.getUserByEmail(validateOTPRequest.getEmail());
-        if(!user.isPresent()) {
+        if (!user.isPresent()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Something went wrong!"));
         }
-        boolean isValidOTP =user.get().getOtp().equals(validateOTPRequest.getOtp());
+        boolean isValidOTP = user.get().getOtp().equals(validateOTPRequest.getOtp());
         long currentEpoch = Instant.now().getEpochSecond();
         boolean isValidOTPExpiry = Long.parseLong(user.get().getOtpExpiry()) >= currentEpoch;
-        if(!isValidOTPExpiry) return ResponseEntity.badRequest().body(new MessageResponse("Error: OTP expired! Please resend."));
-        if(!isValidOTP)
+        if (!isValidOTPExpiry)
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: OTP expired! Please resend."));
+        if (!isValidOTP)
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid OTP! Please try again"));
 
         user.get().setOtp(null);
@@ -138,10 +148,10 @@ public class UserService {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: User is not exist in system!"));
 
         Optional<User> user = userRepository.getUserByEmail(resetPasswordRequest.getEmail());
-        if(!user.isPresent())
+        if (!user.isPresent())
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Something went wrong!"));
 
-        if(!resetPasswordRequest.getPassword().equals(resetPasswordRequest.getConfirmPassword()))
+        if (!resetPasswordRequest.getPassword().equals(resetPasswordRequest.getConfirmPassword()))
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Password and Confirm Password are not same!"));
 
         user.get().setPassword(encoder.encode(resetPasswordRequest.getPassword()));
@@ -149,4 +159,53 @@ public class UserService {
         return ResponseEntity.ok(new MessageResponse("Password reset successfully!"));
     }
 
+    public ResponseEntity<?> getUserByUsername(String username) {
+        if(!HelperUtils.isValidString(username))
+            return ResponseEntity.badRequest().body(new MessageResponse("Invalid username"));
+
+        Optional<User> user = userRepository.findByUsername(username);
+        if(!user.isPresent())
+            return ResponseEntity.badRequest().body(new MessageResponse("User not exists"));
+
+        UserDTO userDTO = new UserDTO(user.get());
+        return  ResponseEntity.ok(userDTO);
+    }
+
+    public UserDTO getUser(String username) {
+        if(!HelperUtils.isValidString(username))
+            return null;
+
+        Optional<User> user = userRepository.findByUsername(username);
+        if(!user.isPresent())
+            return null;
+
+        UserDTO userDTO = new UserDTO(user.get());
+        return userDTO;
+    }
+
+    public ResponseEntity<?> updateUserProfile(UpdateUserProfileRequest updateUserProfileRequest) {
+
+        Optional<User> user = userRepository.findByUsername(updateUserProfileRequest.getUsername());
+
+        if(!user.isPresent()){
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Something went wrong with updating profile"));
+        }else{
+            user.get().setOrganization(updateUserProfileRequest.getOrganization());
+            user.get().setLocation(updateUserProfileRequest.getLocation());
+            user.get().setDescription(updateUserProfileRequest.getDescription());
+            user.get().setLinkedin(updateUserProfileRequest.getLinkedin());
+            user.get().setGithub(updateUserProfileRequest.getGithub());
+            user.get().setResume(updateUserProfileRequest.getResume());
+            user.get().setProfilePicture(updateUserProfileRequest.getProfilePicture());
+        }
+
+
+        userRepository.updateProfile(user.get());
+
+        return ResponseEntity.ok(new MessageResponse("Success: User Profile Updated successfully!"));
+    }
+
+
 }
+
+

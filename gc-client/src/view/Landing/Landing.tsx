@@ -5,7 +5,7 @@ import { Navigate, Outlet } from "react-router-dom";
 
 const Landing = () => {
     const isAuth = useSelector(selectUser);
-
+    
     return (
         <>
             {isAuth ? (

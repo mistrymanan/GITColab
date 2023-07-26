@@ -13,8 +13,8 @@ public class ProjectCreateRequest {
     private String key;
     private String leadAccountId;
     private String name;
-    final static String projectTemplateKey="com.atlassian.jira-core-project-templates:jira-core-simplified-process-control";
-    final static String projectTypeKey="software";
-    final static String url="http://atlassian.com";
+    final String projectTemplateKey="com.pyxis.greenhopper.jira:gh-simplified-agility-scrum";
+    final String projectTypeKey="software";
+    final String url="http://atlassian.com";
 
 }
