@@ -25,7 +25,7 @@ public interface AtlassianServiceClient {
     ProjectResponse getProject(@PathVariable String cloudId,@PathVariable String projectId,@RequestHeader("Authorization") String bearerToken);
 
     @PostExchange("/ex/jira/{cloudId}/rest/api/3/project")
-    ResponseEntity<Void> createProject(@PathVariable String cloudId,@RequestHeader("Authorization") String bearerToken, @RequestBody ProjectCreateRequest createRequest);
+    ResponseEntity<ProjectResponse> createProject(@PathVariable String cloudId,@RequestHeader("Authorization") String bearerToken, @RequestBody ProjectCreateRequest createRequest);
 
     @GetExchange("/ex/jira/{cloudId}/rest/api/3/myself")
     MySelfResponse getUserDetails(@PathVariable String cloudId,@RequestHeader("Authorization") String bearerToken);

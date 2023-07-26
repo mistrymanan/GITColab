@@ -15,4 +15,6 @@ public interface ToolTokenManagerRepository {
     Optional<ToolTokenManager> getByEmail(String email, EnumIntegrationType type);
 
     public Optional<ToolTokenManager> getByUsername(String username);
+    public Optional<ToolTokenManager> getByRepositoryOwner(String repositoryOwner,EnumIntegrationType type);
+
 }

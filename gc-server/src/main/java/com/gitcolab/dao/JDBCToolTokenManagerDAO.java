@@ -53,7 +53,7 @@ public class JDBCToolTokenManagerDAO implements ToolTokenManagerDAO {
 
     @Override
     public Optional<ToolTokenManager> getByEmail(String email, EnumIntegrationType integrationType) {
-        ToolTokenManager integration = new ToolTokenManager();
+        ToolTokenManager integration;
         try {
             integration = jdbcTemplate
                     .queryForObject(
@@ -70,5 +70,21 @@ public class JDBCToolTokenManagerDAO implements ToolTokenManagerDAO {
     @Override
     public Optional<ToolTokenManager> getByUsername(String username) {
         return null;
+    }
+
+    @Override
+    public Optional<ToolTokenManager> getByRepositoryOwner(String repositoryOwner, EnumIntegrationType type) {
+        ToolTokenManager integration;
+        try {
+            integration = jdbcTemplate
+                    .queryForObject(
+                            "select * from ToolTokenRegistry i where i.userId = (select userId from Project p where p.repositoryOwner=?) and i.type=? order by 1 desc limit 1"
+                            ,new Object[]{repositoryOwner,type.toString()}
+                            , new IntegrationRowMapper());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return Optional.empty();
+        }
+        return Optional.of(integration);
     }
 }

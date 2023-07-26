@@ -1,18 +1,22 @@
 package com.gitcolab.services;
 
 import com.gitcolab.configurations.ClientConfig;
-import com.gitcolab.dro.atlassian.GetAccessTokenRequest;
-import com.gitcolab.dro.atlassian.GetAccessTokenResponse;
+import com.gitcolab.dro.atlassian.*;
+import com.gitcolab.dro.project.GithubIssueEvent;
+import com.gitcolab.dro.project.ProjectCreationRequest;
 import com.gitcolab.dto.MessageResponse;
 import com.gitcolab.entity.EnumIntegrationType;
 import com.gitcolab.entity.ToolTokenManager;
+import com.gitcolab.repositories.ProjectRepository;
 import com.gitcolab.repositories.ToolTokenManagerRepository;
 import com.gitcolab.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class AtlassianService {
@@ -20,16 +24,21 @@ public class AtlassianService {
 
     @Value("${gitcolab.app.atlassian.clientSecret}")
     private String ATLASSIAN_CLIENT_SECRET;
-    ToolTokenManagerRepository integrationRepository;
+    ToolTokenManagerRepository toolTokenManagerRepository;
     UserRepository userRepository;
 
     private ClientConfig clientConfig;
+    private AtlassianServiceClient atlassianServiceClient;
+
+    private ProjectRepository projectRepository;
 
 
-    public AtlassianService(ToolTokenManagerRepository integrationRepository, UserRepository userRepository, ClientConfig clientConfig) {
-        this.integrationRepository = integrationRepository;
+    public AtlassianService(ToolTokenManagerRepository toolTokenManagerRepository, UserRepository userRepository, ClientConfig clientConfig,ProjectRepository projectRepository) {
+        this.toolTokenManagerRepository = toolTokenManagerRepository;
         this.userRepository = userRepository;
         this.clientConfig=clientConfig;
+        this.atlassianServiceClient=clientConfig.atlassianServiceClient();
+        this.projectRepository=projectRepository;
     }
 
     public ResponseEntity<?> getAccessToken(GetAccessTokenRequest getAccessTokenRequest, UserDetailsImpl userDetails){
@@ -39,18 +48,91 @@ public class AtlassianService {
 
         getAccessTokenRequest.setClient_secret(ATLASSIAN_CLIENT_SECRET);
 
-        AtlassianServiceClient atlassianServiceClient = clientConfig.atlassianServiceClient();
-
         ResponseEntity<GetAccessTokenResponse> response=atlassianServiceClient.getAccessToken(getAccessTokenRequest);
 
-        Optional<ToolTokenManager> integration = integrationRepository.getByEmail(userDetails.getEmail(),EnumIntegrationType.ATLASSIAN);
+        Optional<ToolTokenManager> integration = toolTokenManagerRepository.getByEmail(userDetails.getEmail(),EnumIntegrationType.ATLASSIAN);
 
         if(!integration.isPresent()) {
-            integrationRepository.save(new ToolTokenManager(EnumIntegrationType.ATLASSIAN, response.getBody().getAccess_token(), userDetails.getId()));
+            toolTokenManagerRepository.save(new ToolTokenManager(EnumIntegrationType.ATLASSIAN, response.getBody().getAccess_token(), userDetails.getId()));
         } else {
-           integrationRepository.update(new ToolTokenManager(EnumIntegrationType.ATLASSIAN, response.getBody().getAccess_token(), userDetails.getId()));
+            toolTokenManagerRepository.update(new ToolTokenManager(EnumIntegrationType.ATLASSIAN, response.getBody().getAccess_token(), userDetails.getId()));
         }
         return response;
     }
 
+    public Optional<AccessibleResource> getAccessibleResources(String bearerToken){
+        List<AccessibleResource> accessibleResources=atlassianServiceClient.getAccessibleResources(bearerToken);
+        if(!accessibleResources.isEmpty()){
+            return Optional.of(accessibleResources.get(0));
+        }
+        return Optional.empty();
+    }
+
+    public Optional<MySelfResponse> getUserDetails(String bearerToken, String cloudId){
+            return Optional.of(atlassianServiceClient.getUserDetails(cloudId,bearerToken));
+    }
+
+    public ResponseEntity<?> createAtlassianProject(ProjectCreationRequest projectCreationRequest){
+        String atlassianToken ="Bearer " + projectCreationRequest.getAtlassianToken();
+
+        Optional<AccessibleResource> accessibleResource = getAccessibleResources(atlassianToken);
+
+        if(!accessibleResource.isEmpty()){
+            String cloudId = accessibleResource.get().getId();
+            Optional<MySelfResponse> mySelfResponse = getUserDetails(atlassianToken,accessibleResource.get().getId());
+            if(!mySelfResponse.isEmpty()){
+                ProjectCreateRequest projectCreateRequest =
+                        new ProjectCreateRequest(
+                                projectCreationRequest.getRepositoryName()
+                                ,generateKey(projectCreationRequest.getRepositoryName())
+                                ,mySelfResponse.get().getAccountId()
+                                ,projectCreationRequest.getRepositoryName());
+            return atlassianServiceClient.createProject(cloudId,atlassianToken,projectCreateRequest);
+            }
+
+        }
+        return ResponseEntity.badRequest().body(new MessageResponse("No Atlassian site found!"));
+    }
+
+    public ResponseEntity<?> createIssue(GithubIssueEvent githubIssueEvent,String projectId,String bearerToken){
+        Optional<AccessibleResource> accessibleResource=getAccessibleResources(bearerToken);
+        if(!accessibleResource.isEmpty()){
+            Optional<MySelfResponse> mySelfResponse=getUserDetails(bearerToken,accessibleResource.get().getId());
+            if(!mySelfResponse.isEmpty()){
+                CreateIssueRequest createIssueRequest = new CreateIssueRequest(githubIssueEvent,projectId,mySelfResponse.get().getAccountId());
+                return atlassianServiceClient.createIssueRequest(accessibleResource.get().getId(),bearerToken,createIssueRequest);
+            }
+        }
+        return ResponseEntity.badRequest().body(new MessageResponse("Something went wrong while creating JIRA!"));
+    }
+
+    public static String generateKey(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty or null.");
+        }
+
+        String[] words = name.split("\\s+");
+        String keyword;
+
+        if (words.length == 1) {
+            keyword = name.toUpperCase().substring(0, Math.min(name.length(), 5));
+        } else {
+            keyword = words[0].toUpperCase().substring(0, Math.min(words[0].length(), 5));
+        }
+
+        String digits = generateRandomDigits(5);
+
+        return keyword + digits;
+    }
+
+    private static String generateRandomDigits(int count) {
+        Random random = new Random();
+        StringBuilder digits = new StringBuilder();
+
+        for (int i = 0; i < count; i++) {
+            digits.append(random.nextInt(10));
+        }
+
+        return digits.toString();
+    }
 }

@@ -1,5 +1,6 @@
 package com.gitcolab.controllers;
 
+import com.gitcolab.dro.project.GithubIssueEvent;
 import com.gitcolab.dro.project.ProjectCreationRequest;
 import com.gitcolab.dto.GithubRepositoryRequest;
 import com.gitcolab.services.GithubService;
@@ -27,10 +28,9 @@ public class ProjectController {
         return githubService.generateRepository(githubRepositoryRequest);
     }
 
-    @PostMapping("/createJira")
-    public ResponseEntity<?> generateJira(@Valid @RequestBody Object createJiraRequest) {
-        System.out.println("JIRA REQUEST====>" + createJiraRequest);
-        return null;
+    @PostMapping(value = "/createJira",headers="Accept=application/json")
+    public ResponseEntity<?> generateJira(@RequestBody GithubIssueEvent createJiraRequest) {
+        return projectService.createJira(createJiraRequest);
     }
 
     @PostMapping("/createProject")

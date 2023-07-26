@@ -103,11 +103,11 @@ class AtlassianServiceClientTest {
         ProjectCreateRequest createRequest = new ProjectCreateRequest("Sample description", "SAMPLE_KEY", "L123", "Sample Project");
 
 
-        ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.CREATED);
+        ResponseEntity<ProjectResponse> response = new ResponseEntity<>(new ProjectResponse("link","1001","key","Project Name"),HttpStatus.CREATED);
         when(atlassianServiceClient.createProject(anyString(), anyString(), any())).thenReturn(response);
 
 
-        ResponseEntity<Void> createProjectResponse = atlassianServiceClient.createProject(cloudId, bearerToken, createRequest);
+        ResponseEntity<ProjectResponse> createProjectResponse = atlassianServiceClient.createProject(cloudId, bearerToken, createRequest);
 
 
         assertEquals(HttpStatus.CREATED, createProjectResponse.getStatusCode());

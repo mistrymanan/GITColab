@@ -1,12 +1,12 @@
-package com.gitcolab.dro.atlassian;
+package com.gitcolab.dro.project;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class IssueType {
-    private String id;
+@AllArgsConstructor
+public class AtlassianUser {
+    String login;
 }

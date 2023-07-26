@@ -29,7 +29,7 @@ import java.util.Optional;
 @Service
 public class GithubService {
     Logger logger= LoggerFactory.getLogger(GithubService.class);
-    ToolTokenManagerRepository integrationRepository;
+    ToolTokenManagerRepository toolTokenManagerRepository;
     UserRepository userRepository;
     @Value("${gitcolab.app.github.clientId}")
     private String CLIENT_ID;
@@ -38,8 +38,8 @@ public class GithubService {
     private String CLIENT_SECRET;
 
     @Autowired
-    public GithubService(ToolTokenManagerRepository integrationRepository, UserRepository userRepository) {
-        this.integrationRepository = integrationRepository;
+    public GithubService(ToolTokenManagerRepository toolTokenManagerRepository, UserRepository userRepository) {
+        this.toolTokenManagerRepository = toolTokenManagerRepository;
         this.userRepository = userRepository;
     }
 
@@ -72,14 +72,14 @@ public class GithubService {
         String type = splitResponse[2].split("=")[1];
 
         Optional<User> user = userRepository.getUserByEmail(githubAuthRequest.getEmail());
-        Optional<ToolTokenManager> github = integrationRepository.getByEmail(githubAuthRequest.getEmail(),EnumIntegrationType.GITHUB);
+        Optional<ToolTokenManager> github = toolTokenManagerRepository.getByEmail(githubAuthRequest.getEmail(),EnumIntegrationType.GITHUB);
         if(!user.isPresent()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Github authentication failed."));
         }
         if(!github.isPresent()) {
-            integrationRepository.save(new ToolTokenManager(EnumIntegrationType.GITHUB, accessToken, user.get().getId()));
+            toolTokenManagerRepository.save(new ToolTokenManager(EnumIntegrationType.GITHUB, accessToken, user.get().getId()));
         } else {
-            integrationRepository.update(new ToolTokenManager(EnumIntegrationType.GITHUB, accessToken, user.get().getId()));
+            toolTokenManagerRepository.update(new ToolTokenManager(EnumIntegrationType.GITHUB, accessToken, user.get().getId()));
         }
 
         return ResponseEntity.ok(new GithubAuthTokenResponse(accessToken, type));

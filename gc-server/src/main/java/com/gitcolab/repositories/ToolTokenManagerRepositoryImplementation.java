@@ -12,25 +12,28 @@ import java.util.Optional;
 public class ToolTokenManagerRepositoryImplementation implements ToolTokenManagerRepository {
 
     @Autowired
-    ToolTokenManagerDAO integrationDAO;
+    ToolTokenManagerDAO toolTokenDAO;
 
     @Override
     public int save(ToolTokenManager integration) {
-        return integrationDAO.save(integration);
+        return toolTokenDAO.save(integration);
     }
 
     @Override
     public int update(ToolTokenManager integration) {
-        return integrationDAO.update(integration);
+        return toolTokenDAO.update(integration);
     }
 
     @Override
     public Optional<ToolTokenManager> getByEmail(String email, EnumIntegrationType type) {
-        return integrationDAO.getByEmail(email,type);
+        return toolTokenDAO.getByEmail(email,type);
     }
 
     @Override
     public Optional<ToolTokenManager> getByUsername(String username) {
-        return integrationDAO.getByUsername(username);
+        return toolTokenDAO.getByUsername(username);
     }
+
+    @Override
+    public Optional<ToolTokenManager> getByRepositoryOwner(String repositoryOwner, EnumIntegrationType type) { return toolTokenDAO.getByRepositoryOwner(repositoryOwner, type); }
 }

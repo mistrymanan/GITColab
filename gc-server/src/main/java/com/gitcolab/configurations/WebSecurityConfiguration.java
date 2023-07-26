@@ -68,6 +68,7 @@ public class WebSecurityConfiguration {
                                     .requestMatchers("/api/auth/refreshtoken").permitAll()
                                     .requestMatchers("/api/test/**").permitAll()
                                     .requestMatchers("/api/**").permitAll()
+                                    .requestMatchers("/api/project/createJira").permitAll()
                                     .anyRequest().authenticated()
                     );
 

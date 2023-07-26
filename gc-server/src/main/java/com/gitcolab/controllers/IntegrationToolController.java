@@ -33,7 +33,8 @@ public class IntegrationToolController {
 
     @PostMapping("/atlassian/getAccessToken")
     public ResponseEntity<?> getAtlassianAccessToken(@Valid @RequestBody GetAccessTokenRequest getAccessTokenRequest, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return atlassianService.getAccessToken(getAccessTokenRequest,userDetails);
+        ResponseEntity<?> response=atlassianService.getAccessToken(getAccessTokenRequest,userDetails);
+        return response;
     }
 
     @PostMapping("/generateRepo")

@@ -44,4 +44,10 @@ public class JDBCProjectDAO implements ProjectDAO {
     @Override
     public void delete(long id) {
     }
+
+    @Override
+    public Optional<Project> getProjectByRepositoryNameAndOwner(String repositoryName, String repositoryOwner) {
+        Project project=jdbcTemplate.queryForObject("select * from Project p where p.repositoryName=? and p.repositoryOwner=?",new Object[]{repositoryName,repositoryOwner}, new ProjectRowMapper());
+        return Optional.of(project);
+    }
 }
